@@ -89,6 +89,10 @@ public class Cliente {
         this.telefone = telefone;
     }
 
+    public void inativar(){
+        this.setAtivo(false);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
