@@ -26,7 +26,7 @@ public class HealthController {
             "1.0.0",
             "Lucas Reis",
             "JDK 21",
-            "Spring Boot 3.2.x"
+            "Spring Boot 3.5.2"
         );
     }
 
