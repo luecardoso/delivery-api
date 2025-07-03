@@ -20,6 +20,8 @@ public class Pedido {
     private BigDecimal taxaEntrega;
     private BigDecimal valorTotal;
 
+    private String Observacoes;
+
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
 
@@ -33,6 +35,14 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens;
+
+    public void adicionarItem(ItemPedido itemPedido){
+        itens.add(itemPedido);
+    }
+
+    public void confirmar(){
+
+    }
 
     public Pedido(BigDecimal valorTotal, BigDecimal taxaEntrega, BigDecimal subtotal, StatusPedido status, Restaurante restaurante, List<ItemPedido> itens, Long id, String enderecoEntrega, LocalDateTime dataPedido, Cliente cliente) {
         this.valorTotal = valorTotal;
@@ -128,6 +138,14 @@ public class Pedido {
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public String getObservacoes() {
+        return Observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        Observacoes = observacoes;
     }
 
     @Override

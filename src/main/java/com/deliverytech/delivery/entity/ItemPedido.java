@@ -24,6 +24,9 @@ public class ItemPedido {
     @JoinColumn(name = "produto_id")
     private Produto produto;
 
+    public ItemPedido() {
+    }
+
     public ItemPedido(Long id, Pedido pedido, BigDecimal precoUnitario, Produto produto, int quantidade, BigDecimal subtotal) {
         this.id = id;
         this.pedido = pedido;
@@ -79,6 +82,10 @@ public class ItemPedido {
 
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public void calcularSubTotal(){
+        this.subtotal = this.getPrecoUnitario().multiply(BigDecimal.valueOf(this.getQuantidade()));
     }
 
     @Override
