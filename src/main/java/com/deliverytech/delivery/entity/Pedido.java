@@ -1,5 +1,6 @@
 package com.deliverytech.delivery.entity;
 
+import com.deliverytech.delivery.enums.StatusPedido;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -20,7 +21,8 @@ public class Pedido {
     private BigDecimal taxaEntrega;
     private BigDecimal valorTotal;
 
-    private String Observacoes;
+    private String observacoes;
+    private String numeroPedido;
 
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
@@ -141,11 +143,11 @@ public class Pedido {
     }
 
     public String getObservacoes() {
-        return Observacoes;
+        return observacoes;
     }
 
     public void setObservacoes(String observacoes) {
-        Observacoes = observacoes;
+        this.observacoes = observacoes;
     }
 
     @Override

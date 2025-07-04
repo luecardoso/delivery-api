@@ -20,6 +20,10 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidos;
 
+    public void inativar(){
+        this.ativo = false;
+    }
+
     public Cliente() {
     }
 
@@ -87,10 +91,6 @@ public class Cliente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-
-    public void inativar(){
-        this.setAtivo(false);
     }
 
     @Override

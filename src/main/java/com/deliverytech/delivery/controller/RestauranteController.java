@@ -1,2 +1,4 @@
-package com.deliverytech.delivery.controller;public class RestauranteController {
+package com.deliverytech.delivery.controller;
+
+public class RestauranteController {
 }

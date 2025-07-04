@@ -2,7 +2,7 @@ package com.deliverytech.delivery.repository;
 
 import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.entity.Pedido;
-import com.deliverytech.delivery.entity.StatusPedido;
+import com.deliverytech.delivery.enums.StatusPedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

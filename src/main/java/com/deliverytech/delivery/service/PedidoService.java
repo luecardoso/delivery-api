@@ -1,6 +1,7 @@
 package com.deliverytech.delivery.service;
 
 import com.deliverytech.delivery.entity.*;
+import com.deliverytech.delivery.enums.StatusPedido;
 import com.deliverytech.delivery.repository.ClienteRepository;
 import com.deliverytech.delivery.repository.PedidoRepository;
 import com.deliverytech.delivery.repository.ProdutoRepository;
@@ -152,6 +153,21 @@ public class PedidoService {
             pedido.setObservacoes(pedido.getObservacoes() + " | Cancelado: " + motivo);
         }
 
+        return pedidoRepository.save(pedido);
+    }
+
+    /**
+     * Atualizar status do pedido
+     */
+    public Pedido atualizarStatus(Long pedidoId, StatusPedido status) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado: " + pedidoId));
+
+        if (pedido.getStatus().equals(StatusPedido.ENTREGUE.name())) {
+            throw new IllegalArgumentException("Pedido já finalizado: " + pedidoId);
+        }
+
+        pedido.setStatus(status);
         return pedidoRepository.save(pedido);
     }
 }

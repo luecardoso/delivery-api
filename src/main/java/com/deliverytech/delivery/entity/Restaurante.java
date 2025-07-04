@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Restaurante {
@@ -16,6 +17,7 @@ public class Restaurante {
     private String endereco;
     private String telefone;
     private BigDecimal taxaEntrega;
+    private BigDecimal avaliacao;
     private boolean ativo;
 
     @OneToMany(mappedBy = "restaurante")
@@ -24,11 +26,16 @@ public class Restaurante {
     @OneToMany(mappedBy = "restaurante")
     private List<Pedido> pedidos;
 
+    public void inativar() {
+        this.ativo = false;
+    }
+
     public Restaurante() {
     }
 
-    public Restaurante(boolean ativo, String categoria, String endereco, Long id, String nome, List<Pedido> pedidos, List<Produto> produtos, BigDecimal taxaEntrega, String telefone) {
+    public Restaurante(boolean ativo, BigDecimal avaliacao, String categoria, String endereco, Long id, String nome, List<Pedido> pedidos, List<Produto> produtos, BigDecimal taxaEntrega, String telefone) {
         this.ativo = ativo;
+        this.avaliacao = avaliacao;
         this.categoria = categoria;
         this.endereco = endereco;
         this.id = id;
@@ -109,5 +116,41 @@ public class Restaurante {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public BigDecimal getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(BigDecimal avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Restaurante that = (Restaurante) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurante{" +
+                "telefone='" + getTelefone() + '\'' +
+                ", taxaEntrega=" + getTaxaEntrega() +
+                ", nome='" + getNome() + '\'' +
+                ", endereco='" + getEndereco() + '\'' +
+                ", id=" + getId() +
+                ", categoria='" + getCategoria() + '\'' +
+                ", avaliacao=" + getAvaliacao() +
+                ", ativo=" + isAtivo() +
+                ", produtos=" + getProdutos() +
+                '}';
     }
 }
