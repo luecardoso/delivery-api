@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "73688c19-cec5-45ef-876e-101e4dbfb39f",
+		"name": "Delivery-Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31813255"
+	},
+	"item": [
+		{
+			"name": "Cadastrar Cliente",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"Ana Costa\",\r\n    \"email\": \"ana@email.com\",\r\n    \"telefone\": \"(11) 99999-4444\",\r\n    \"endereco\": \"Rua D, 321 - São Paulo/SP\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/clientes"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Clientes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/clientes"
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Cliente",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/clientes/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Pedido",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pedidos?clienteId=1&restauranteId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pedidos"
+					],
+					"query": [
+						{
+							"key": "clienteId",
+							"value": "1"
+						},
+						{
+							"key": "restauranteId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Adicionar Item ao Pedido",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pedidos/1/itens?produtoId=1&quantidade=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pedidos",
+						"1",
+						"itens"
+					],
+					"query": [
+						{
+							"key": "produtoId",
+							"value": "1"
+						},
+						{
+							"key": "quantidade",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirmar Pedido",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": "http://localhost:8080/pedidos/1/confirmar"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Pedidos por Cliente",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/pedidos/cliente/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Status do Pedido",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pedidos/1/status?status=PREPARANDO",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pedidos",
+						"1",
+						"status"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "PREPARANDO"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

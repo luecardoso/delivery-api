@@ -1,6 +1,7 @@
 package com.deliverytech.delivery.entity;
 
 import com.deliverytech.delivery.enums.StatusPedido;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "pedidos")
 public class Pedido {
 
     @Id
@@ -36,6 +38,7 @@ public class Pedido {
     private Restaurante restaurante;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ItemPedido> itens;
 
     public void adicionarItem(ItemPedido itemPedido){

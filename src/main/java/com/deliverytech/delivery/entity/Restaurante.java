@@ -1,5 +1,6 @@
 package com.deliverytech.delivery.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "restaurantes")
 public class Restaurante {
 
     @Id
@@ -21,9 +23,11 @@ public class Restaurante {
     private boolean ativo;
 
     @OneToMany(mappedBy = "restaurante")
+    @JsonIgnore
     private List<Produto> produtos;
 
     @OneToMany(mappedBy = "restaurante")
+    @JsonIgnore
     private List<Pedido> pedidos;
 
     public void inativar() {

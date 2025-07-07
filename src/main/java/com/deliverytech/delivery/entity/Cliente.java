@@ -1,11 +1,14 @@
 package com.deliverytech.delivery.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "clientes")
 public class Cliente {
 
     @Id
@@ -15,9 +18,15 @@ public class Cliente {
     private String email;
     private String telefone;
     private String endereco;
+
+    @Column(nullable = true)
     private boolean ativo;
 
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastro;
+
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<Pedido> pedidos;
 
     public void inativar(){
