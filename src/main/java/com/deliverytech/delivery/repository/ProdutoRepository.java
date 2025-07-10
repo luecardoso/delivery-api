@@ -33,10 +33,14 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findByDisponivelTrueOrderByPrecoAsc();
     List<Produto> findByDisponivelTrueOrderByPrecoDesc();
 
-//    // Query customizada - produtos mais vendidos
-//    @Query("SELECT p FROM Produto p JOIN p.itensPedido ip " +
-//            "GROUP BY p ORDER BY COUNT(ip) DESC")
-//    List<Produto> findProdutosMaisVendidos();
+    // Query customizada - produtos mais vendidos
+    @Query(value = "SELECT p.nome, COUNT(ip.produto_id) as quantidade_vendida " +
+            "FROM produto p " +
+            "LEFT JOIN item_pedido ip ON p.id = ip.produto_id " +
+            "GROUP BY p.id, p.nome " +
+            "ORDER BY quantidade_vendida DESC " +
+            "LIMIT 5", nativeQuery = true)
+    List<Object[]> produtosMaisVendidos();
 
     // Buscar por restaurante e categoria
     @Query("SELECT p FROM Produto p WHERE p.restaurante.id = :restauranteId " +

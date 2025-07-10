@@ -87,7 +87,7 @@ public class PedidoController {
     /**
      * Listar pedidos por cliente
      */
-    @GetMapping("/cliente/{clienteId}")
+    @GetMapping("/clientes/{clienteId}")
     public ResponseEntity<List<Pedido>> listarPorCliente(@PathVariable Long clienteId) {
         List<Pedido> pedidos = pedidoService.listarPorCliente(clienteId);
         return ResponseEntity.ok(pedidos);

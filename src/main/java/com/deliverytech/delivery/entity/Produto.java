@@ -25,6 +25,15 @@ public class Produto {
     public Produto() {
     }
 
+    public Produto(String categoria, String descricao, boolean disponivel, String nome, BigDecimal preco, Restaurante restaurante) {
+        this.categoria = categoria;
+        this.descricao = descricao;
+        this.disponivel = disponivel;
+        this.nome = nome;
+        this.preco = preco;
+        this.restaurante = restaurante;
+    }
+
     public String getCategoria() {
         return categoria;
     }

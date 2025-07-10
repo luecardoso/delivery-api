@@ -36,14 +36,14 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(boolean ativo, String email, String endereco, Long id, String nome, List<Pedido> pedidos, String telefone) {
-        this.ativo = ativo;
+    public Cliente(String email, String endereco, String nome, List<Pedido> pedidos, String telefone, LocalDateTime dataCadastro) {
+        this.ativo = true;
         this.email = email;
         this.endereco = endereco;
-        this.id = id;
         this.nome = nome;
         this.pedidos = pedidos;
         this.telefone = telefone;
+        this.dataCadastro = dataCadastro;
     }
 
     public boolean isAtivo() {
@@ -100,6 +100,14 @@ public class Cliente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public LocalDateTime getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(LocalDateTime dataCadastro) {
+        this.dataCadastro = dataCadastro;
     }
 
     @Override

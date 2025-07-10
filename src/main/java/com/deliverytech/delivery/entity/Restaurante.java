@@ -37,15 +37,12 @@ public class Restaurante {
     public Restaurante() {
     }
 
-    public Restaurante(boolean ativo, BigDecimal avaliacao, String categoria, String endereco, Long id, String nome, List<Pedido> pedidos, List<Produto> produtos, BigDecimal taxaEntrega, String telefone) {
-        this.ativo = ativo;
+    public Restaurante(BigDecimal avaliacao, String categoria, String endereco,String nome, BigDecimal taxaEntrega, String telefone) {
+        this.ativo = true;
         this.avaliacao = avaliacao;
         this.categoria = categoria;
         this.endereco = endereco;
-        this.id = id;
         this.nome = nome;
-        this.pedidos = pedidos;
-        this.produtos = produtos;
         this.taxaEntrega = taxaEntrega;
         this.telefone = telefone;
     }
@@ -153,8 +150,7 @@ public class Restaurante {
                 ", id=" + getId() +
                 ", categoria='" + getCategoria() + '\'' +
                 ", avaliacao=" + getAvaliacao() +
-                ", ativo=" + isAtivo() +
-                ", produtos=" + getProdutos() +
-                '}';
+                ", ativo=" + isAtivo()
+                ;
     }
 }

@@ -28,9 +28,9 @@ public class ProdutoController {
     /**
      * Criar novo produto
      */
-    @PostMapping("/restauranteId")
-    public ResponseEntity<?> criarProduto(@Valid @RequestBody Produto produto, @RequestParam Long restauranteId) {
-        Optional<Restaurante> restaurante = restauranteService.buscarPorId(restauranteId);
+    @PostMapping("/restaurantes/{restauranteId}")
+    public ResponseEntity<?> criarProduto(@Valid @RequestBody Produto produto, @PathVariable Long restauranteId) {
+
         try {
             Produto produtoSalvo = produtoService.cadastrar(produto, restauranteId);
             return ResponseEntity.status(HttpStatus.CREATED).body(produto);
@@ -59,7 +59,7 @@ public class ProdutoController {
     /**
      * Listar produtos por restaurante
      */
-    @GetMapping("/restaurante/{restauranteId}")
+    @GetMapping("/restaurantes/{restauranteId}")
     public ResponseEntity<List<Produto>> listarPorRestaurante(@PathVariable Long restauranteId) {
         List<Produto> produtos = produtoService.listarPorRestaurante(restauranteId);
         return ResponseEntity.ok(produtos);

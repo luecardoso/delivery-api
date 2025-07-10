@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +40,7 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<ItemPedido> itens;
+    private List<ItemPedido> itens = new ArrayList<>();
 
     public void adicionarItem(ItemPedido itemPedido){
         itens.add(itemPedido);
@@ -49,14 +50,14 @@ public class Pedido {
 
     }
 
-    public Pedido(BigDecimal valorTotal, BigDecimal taxaEntrega, BigDecimal subtotal, StatusPedido status, Restaurante restaurante, List<ItemPedido> itens, Long id, String enderecoEntrega, LocalDateTime dataPedido, Cliente cliente) {
+    public Pedido(String numeroPedido,BigDecimal valorTotal, BigDecimal taxaEntrega, BigDecimal subtotal, StatusPedido status, Restaurante restaurante, List<ItemPedido> itens, String enderecoEntrega, LocalDateTime dataPedido, Cliente cliente) {
+        this.numeroPedido = numeroPedido;
         this.valorTotal = valorTotal;
         this.taxaEntrega = taxaEntrega;
         this.subtotal = subtotal;
         this.status = status;
         this.restaurante = restaurante;
         this.itens = itens;
-        this.id = id;
         this.enderecoEntrega = enderecoEntrega;
         this.dataPedido = dataPedido;
         this.cliente = cliente;
@@ -153,6 +154,14 @@ public class Pedido {
         this.observacoes = observacoes;
     }
 
+    public String getNumeroPedido() {
+        return numeroPedido;
+    }
+
+    public void setNumeroPedido(String numeroPedido) {
+        this.numeroPedido = numeroPedido;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -170,15 +179,14 @@ public class Pedido {
     public String toString() {
         return "Pedido{" +
                 "cliente=" + getCliente() +
-                ", id=" + getId() +
                 ", dataPedido=" + getDataPedido() +
                 ", enderecoEntrega='" + getEnderecoEntrega() + '\'' +
+                ", numeroPedido='" + getNumeroPedido() + '\'' +
+                ", observacoes='" + getObservacoes() + '\'' +
+                ", restaurante=" + getRestaurante() +
                 ", subtotal=" + getSubtotal() +
                 ", taxaEntrega=" + getTaxaEntrega() +
                 ", valorTotal=" + getValorTotal() +
-                ", status=" + getStatus() +
-                ", restaurante=" + getRestaurante() +
-                ", itens=" + getItens() +
                 '}';
     }
 }

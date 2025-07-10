@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
-
-
     // Buscar pedidos por cliente
     List<Pedido> findByClienteOrderByDataPedidoDesc(Cliente cliente);
 
@@ -28,6 +26,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     // Buscar pedidos por período
     List<Pedido> findByDataPedidoBetweenOrderByDataPedidoDesc(LocalDateTime inicio, LocalDateTime fim);
+
+    List<Pedido> findTop10ByOrderByDataPedidoDesc();
 
     // Buscar pedidos do dia
 //    @Query("SELECT p FROM Pedido p WHERE DATE(p.dataPedido) = CURRENT_DATE ORDER BY p.dataPedido DESC")
@@ -51,4 +51,25 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             "AND p.status NOT IN ('CANCELADO')")
     BigDecimal calcularVendasPorPeriodo(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
 
+    //Total de vendas por restaurante
+    @Query("SELECT p.restaurante.nome, SUM(p.valorTotal) " +
+            "FROM Pedido p " +
+            "GROUP BY p.restaurante.id, p.restaurante.nome " +
+            "ORDER BY SUM(p.valorTotal) DESC")
+    List<Object[]> calcularTotalVendasPorRestaurante();
+
+    //Pedidos com valor acima de x
+    @Query("SELECT p FROM Pedido p WHERE p.valorTotal > :valor ORDER BY p.valorTotal DESC")
+    List<Pedido> buscarPedidosComValorAcimaDe(@Param("valor") BigDecimal valor);
+
+    // Relatorio de Pedidos por Periodo
+    @Query("SELECT p FROM Pedido p " +
+            "WHERE p.dataPedido BETWEEN :inicio AND :fim " +
+            "AND p.status = :status " +
+            "ORDER BY p.dataPedido DESC")
+
+    List<Pedido> relatorioPedidosPorPeriodoEStatus(
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fim") LocalDateTime fim,
+            @Param("status") StatusPedido status);
 }
