@@ -36,12 +36,11 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(String email, String endereco, String nome, List<Pedido> pedidos, String telefone, LocalDateTime dataCadastro) {
+    public Cliente(String nome,String email, String endereco, String telefone, LocalDateTime dataCadastro) {
         this.ativo = true;
         this.email = email;
         this.endereco = endereco;
         this.nome = nome;
-        this.pedidos = pedidos;
         this.telefone = telefone;
         this.dataCadastro = dataCadastro;
     }

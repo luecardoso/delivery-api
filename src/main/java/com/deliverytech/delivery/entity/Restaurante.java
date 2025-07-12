@@ -21,6 +21,7 @@ public class Restaurante {
     private BigDecimal taxaEntrega;
     private BigDecimal avaliacao;
     private boolean ativo;
+    private Integer tempoEntregaMinutos;
 
     @OneToMany(mappedBy = "restaurante")
     @JsonIgnore
@@ -125,6 +126,14 @@ public class Restaurante {
 
     public void setAvaliacao(BigDecimal avaliacao) {
         this.avaliacao = avaliacao;
+    }
+
+    public Integer getTempoEntregaMinutos() {
+        return tempoEntregaMinutos;
+    }
+
+    public void setTempoEntregaMinutos(Integer tempoEntregaMinutos) {
+        this.tempoEntregaMinutos = tempoEntregaMinutos;
     }
 
     @Override

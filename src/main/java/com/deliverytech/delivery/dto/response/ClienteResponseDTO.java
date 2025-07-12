@@ -2,17 +2,17 @@ package com.deliverytech.delivery.dto.response;
 
 import java.util.Objects;
 
-public class ClienteResponse {
+public class ClienteResponseDTO {
 
     private Long id;
     private String nome;
     private String email;
     private Boolean ativo;
 
-    public ClienteResponse() {
+    public ClienteResponseDTO() {
     }
 
-    public ClienteResponse(Boolean ativo, String email, Long id, String nome) {
+    public ClienteResponseDTO(Boolean ativo, String email, Long id, String nome) {
         this.ativo = ativo;
         this.email = email;
         this.id = id;
@@ -55,7 +55,7 @@ public class ClienteResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ClienteResponse that = (ClienteResponse) o;
+        ClienteResponseDTO that = (ClienteResponseDTO) o;
         return Objects.equals(getId(), that.getId()) && Objects.equals(getEmail(), that.getEmail());
     }
 
@@ -66,7 +66,7 @@ public class ClienteResponse {
 
     @Override
     public String toString() {
-        return "ClienteResponse{" +
+        return "ClienteResponseDTO{" +
                 "ativo=" + getAtivo() +
                 ", id=" + getId() +
                 ", nome='" + getNome() + '\'' +

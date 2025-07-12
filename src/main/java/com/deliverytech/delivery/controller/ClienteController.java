@@ -1,6 +1,7 @@
 package com.deliverytech.delivery.controller;
 
-import com.deliverytech.delivery.entity.Cliente;
+import com.deliverytech.delivery.dto.request.ClienteRequestDTO;
+import com.deliverytech.delivery.dto.response.ClienteResponseDTO;
 import com.deliverytech.delivery.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,10 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/clientes")
 @CrossOrigin(origins = "*")
 public class ClienteController {
 
@@ -22,24 +22,17 @@ public class ClienteController {
      * Cadastrar novo cliente
      */
     @PostMapping
-    public ResponseEntity<?> cadastrar(@Valid @RequestBody Cliente cliente) {
-        try {
-            Cliente clienteSalvo = clienteService.cadastrar(cliente);
-            return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno do servidor");
-        }
+    public ResponseEntity<ClienteResponseDTO> cadastrarCliente(@Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
+        ClienteResponseDTO clienteResponseDTO = clienteService.cadastrarCliente(clienteRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteResponseDTO);
     }
 
     /**
      * Listar todos os clientes ativos
      */
     @GetMapping
-    public ResponseEntity<List<Cliente>> listar() {
-        List<Cliente> clientes = clienteService.listarAtivos();
+    public ResponseEntity<List<ClienteResponseDTO>> listarClientesAtivos() {
+        List<ClienteResponseDTO> clientes = clienteService.listarClientesAtivos();
         return ResponseEntity.ok(clientes);
     }
 
@@ -48,54 +41,16 @@ public class ClienteController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-        Optional<Cliente> cliente = clienteService.buscarPorId(id);
-
-        if (cliente.isPresent()) {
-            return ResponseEntity.ok(cliente.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    /**
-     * Atualizar cliente
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable Long id,
-                                       @Valid @RequestBody Cliente cliente) {
-        try {
-            Cliente clienteAtualizado = clienteService.atualizar(id, cliente);
-            return ResponseEntity.ok(clienteAtualizado);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno do servidor");
-        }
-    }
-
-    /**
-     * Inativar cliente (soft delete)
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> inativar(@PathVariable Long id) {
-        try {
-            clienteService.inativar(id);
-            return ResponseEntity.ok().body("Cliente inativado com sucesso");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno do servidor");
-        }
+        ClienteResponseDTO cliente = clienteService.buscarClientePorId(id);
+        return ResponseEntity.ok(cliente);
     }
 
     /**
      * Buscar clientes por nome
      */
     @GetMapping("/buscar")
-    public ResponseEntity<List<Cliente>> buscarPorNome(@RequestParam String nome) {
-        List<Cliente> clientes = clienteService.buscarPorNome(nome);
+    public ResponseEntity<List<ClienteResponseDTO>> buscarClientePorNome(@RequestParam String nome) {
+        List<ClienteResponseDTO> clientes = clienteService.buscarClientePorNome(nome);
         return ResponseEntity.ok(clientes);
     }
 
@@ -103,13 +58,28 @@ public class ClienteController {
      * Buscar cliente por email
      */
     @GetMapping("/email/{email}")
-    public ResponseEntity<?> buscarPorEmail(@PathVariable String email) {
-        Optional<Cliente> cliente = clienteService.buscarPorEmail(email);
-
-        if (cliente.isPresent()) {
-            return ResponseEntity.ok(cliente.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ClienteResponseDTO> buscarClientePorEmail(@PathVariable String email) {
+        ClienteResponseDTO cliente = clienteService.buscarClientePorEmail(email);
+        return ResponseEntity.ok(cliente);
     }
+
+    /**
+     * Atualizar cliente
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<ClienteResponseDTO> atualizarCliente(@PathVariable Long id,
+                                       @Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
+        ClienteResponseDTO clienteAtualizado = clienteService.atualizarCliente(id, clienteRequestDTO);
+        return ResponseEntity.ok(clienteAtualizado);
+    }
+
+    /**
+     * Inativar cliente (soft delete)
+     */
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ClienteResponseDTO> ativarDesativarCliente(@PathVariable Long id) {
+        ClienteResponseDTO clienteAtualizado = clienteService.ativarDesativarCliente(id);
+        return ResponseEntity.ok(clienteAtualizado);
+    }
+
 }

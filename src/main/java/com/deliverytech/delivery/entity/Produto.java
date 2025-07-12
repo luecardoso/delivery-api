@@ -16,7 +16,7 @@ public class Produto {
     private String descricao;
     private BigDecimal preco;
     private String categoria;
-    private boolean disponivel;
+    private Boolean disponivel;
 
     @ManyToOne
     @JoinColumn(name = "restaurante_id")
@@ -50,12 +50,12 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public boolean isDisponivel() {
+    public boolean getDisponivel() {
         return disponivel;
     }
 
-    public void setDisponivel(boolean disponivel) {
-        this.disponivel = disponivel;
+    public void setDisponivel(boolean atico) {
+        this.disponivel = atico;
     }
 
     public Long getId() {
@@ -111,7 +111,7 @@ public class Produto {
                 ", nome='" + getNome() + '\'' +
                 ", descricao='" + getDescricao() + '\'' +
                 ", preco=" + getPreco() +
-                ", disponivel=" + isDisponivel() +
+                ", disponivel=" + getDisponivel() +
                 ", restaurante=" + getRestaurante() +
                 '}';
     }
