@@ -1,0 +1,674 @@
+{
+	"info": {
+		"_postman_id": "73688c19-cec5-45ef-876e-101e4dbfb39f",
+		"name": "Delivery-Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31813255"
+	},
+	"item": [
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "Cadastrar Cliente",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Lucas Reis\",\r\n    \"email\": \"lucasreis@email.com\",\r\n    \"telefone\": \"11999999999\",\r\n    \"endereco\": \"Rua A, 123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/clientes"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Clientes Ativos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/clientes"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cliente Por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/clientes/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cliente Nome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/clientes/buscar?nome=Lucas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"clientes",
+								"buscar"
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": "Lucas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cliente Por Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/clientes/email/joao@email.com"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Ana Costa Da Silva\",\r\n    \"email\": \"ana@email.com\",\r\n    \"telefone\": \"11999994444\",\r\n    \"endereco\": \"Rua D, 321 - São Paulo/SP\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/clientes/7"
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar Desativar Cliente",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": "http://localhost:8080/api/clientes/7/status"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Restaurante",
+			"item": [
+				{
+					"name": "Cadastrar Restaurante",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Feijão de corda\",\r\n    \"categoria\": \"Comida\",\r\n    \"endereco\": \"Rua das Laranjas 123\",\r\n    \"telefone\":\"11999999999\",\r\n    \"taxaEntrega\":12.0,\r\n    \"avaliacao\":4.3,\r\n    \"ativo\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/restaurantes"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Restaurante Por ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Feijão de corda\",\r\n    \"categoria\": \"Comida\",\r\n    \"endereco\": \"Rua das Laranjas 123\",\r\n    \"telefone\":\"119999999\",\r\n    \"taxaEntrega\":12.0,\r\n    \"avaliacao\":4.3,\r\n    \"ativo\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/restaurantes/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Restaurantes Ativos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Feijão de corda\",\r\n    \"categoria\": \"Comida\",\r\n    \"endereco\": \"Rua das Laranjas 123\",\r\n    \"telefone\":\"119999999\",\r\n    \"taxaEntrega\":12.0,\r\n    \"avaliacao\":4.3,\r\n    \"ativo\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/restaurantes"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Restaurante Por Categoria",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Feijão de corda\",\r\n    \"categoria\": \"Comida\",\r\n    \"endereco\": \"Rua das Laranjas 123\",\r\n    \"telefone\":\"119999999\",\r\n    \"taxaEntrega\":12.0,\r\n    \"avaliacao\":4.3,\r\n    \"ativo\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/restaurantes/categoria/Japonesa"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Restaurante Por Nome",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Feijão de corda\",\r\n    \"categoria\": \"Comida\",\r\n    \"endereco\": \"Rua das Laranjas 123\",\r\n    \"telefone\":\"119999999\",\r\n    \"taxaEntrega\":12.0,\r\n    \"avaliacao\":4.3,\r\n    \"ativo\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/restaurantes/buscar/Pizzaria Bella"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Restaurante Por Preco",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Feijão de corda\",\r\n    \"categoria\": \"Comida\",\r\n    \"endereco\": \"Rua das Laranjas 123\",\r\n    \"telefone\":\"119999999\",\r\n    \"taxaEntrega\":12.0,\r\n    \"avaliacao\":4.3,\r\n    \"ativo\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/restaurantes/buscar/7.0/15.0"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Por Taxa Entrega",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/restaurantes/buscar/taxa?taxa=7.0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"restaurantes",
+								"buscar",
+								"taxa"
+							],
+							"query": [
+								{
+									"key": "taxa",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Restaurante",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Rodeio do Feijão\",\r\n    \"categoria\": \"Comida\",\r\n    \"endereco\": \"Rua das Amêndoas 123\",\r\n    \"telefone\":\"11999999999\",\r\n    \"taxaEntrega\":15.0,\r\n    \"avaliacao\":4.7,\r\n    \"ativo\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/restaurantes/4"
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar Desativar Restaurante",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": "http://localhost:8080/api/restaurantes/4"
+					},
+					"response": []
+				},
+				{
+					"name": "Calcular Taxa Entrega",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/restaurantes/1/taxa-entrega/01122345"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Produto",
+			"item": [
+				{
+					"name": "Criar Produto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Produto 5\",\r\n    \"descricao\": \"descrição do produto 1\",\r\n    \"preco\":12.0,\r\n    \"categoria\": \"Comida\",\r\n    \"disponivel\":true,\r\n    \"restauranteId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/produtos"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Produto Por Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Produto 5\",\r\n    \"descricao\": \"descrição do produto 1\",\r\n    \"preco\":12.0,\r\n    \"categoria\": \"Comida\",\r\n    \"disponivel\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/produtos/10"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Produtos Por Restaurante",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Produto 5\",\r\n    \"descricao\": \"descrição do produto 1\",\r\n    \"preco\":12.0,\r\n    \"categoria\": \"Comida\",\r\n    \"disponivel\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/produtos/restaurantes/1/produtos"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Produto Por Categoria",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Produto 5\",\r\n    \"descricao\": \"descrição do produto 1\",\r\n    \"preco\":12.0,\r\n    \"categoria\": \"Comida\",\r\n    \"disponivel\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/produtos/categoria/Acompanhamento"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Produto Por Nome",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Produto 5\",\r\n    \"descricao\": \"descrição do produto 1\",\r\n    \"preco\":12.0,\r\n    \"categoria\": \"Comida\",\r\n    \"disponivel\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/produtos/buscar/Produto 5"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Todos Produtos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Produto 5\",\r\n    \"descricao\": \"descrição do produto 1\",\r\n    \"preco\":12.0,\r\n    \"categoria\": \"Comida\",\r\n    \"disponivel\":true\r\n}"
+						},
+						"url": "http://localhost:8080/api/produtos/buscar"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Produto Por Faixa de Preco",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/produtos/buscar/preco?precoMinimo=0&precoMaximo=30",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"produtos",
+								"buscar",
+								"preco"
+							],
+							"query": [
+								{
+									"key": "precoMinimo",
+									"value": "0"
+								},
+								{
+									"key": "precoMaximo",
+									"value": "30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Produtos Por Restaurante",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clienteId\": 1,\r\n    \"restauranteId\": 1,\r\n    \"enderecoEntrega\": \"Rua B, 456\",\r\n    \"valorTotal\": 35.90,\r\n    \"numeroPedido\": \"PEDIDO20250712\",\r\n    \"dataPedido\": \"2024-07-12T10:30:00.000Z\",\r\n    \"itens\": [\r\n        {\r\n            \"produtoId\": 1, \r\n            \"quantidade\": 2\r\n        },\r\n        {\r\n            \"produtoId\": 2, \r\n            \"quantidade\": 1\r\n        }\r\n    ]\r\n}\r\n"
+						},
+						"url": "http://localhost:8080/api/produtos/restaurantes/1/produtos"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Por Preco Menor ou Igual",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/produtos/buscar/preco/20"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Produto",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Produto Atualizado 10\",\r\n    \"descricao\": \"descrição do produto 10\",\r\n    \"preco\":5.90,\r\n    \"categoria\": \"Acompanhamento\",\r\n    \"disponivel\":true,\r\n    \"restauranteId\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/produtos/10"
+					},
+					"response": []
+				},
+				{
+					"name": "Alterar Disponibilidade",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/produtos/10/disponibilidade?disponibilidade=false",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"produtos",
+								"10",
+								"disponibilidade"
+							],
+							"query": [
+								{
+									"key": "disponibilidade",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar Desativar Produto",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": "http://localhost:8080/api/produtos/5"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pedido",
+			"item": [
+				{
+					"name": "Criar Pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clienteId\": 1,\r\n    \"restauranteId\": 1,\r\n    \"enderecoEntrega\": \"Rua B, 456\",\r\n    \"valorTotal\": 35.90,\r\n    \"numeroPedido\": \"PEDIDO20250712\",\r\n    \"dataPedido\": \"2024-07-12T10:30:00.000Z\",\r\n    \"itens\": [\r\n        {\r\n            \"produtoId\": 1, \r\n            \"quantidade\": 2\r\n        },\r\n        {\r\n            \"produtoId\": 2, \r\n            \"quantidade\": 1\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/pedidos"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Pedido Por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/pedidos/5"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Pedidos Por Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/pedidos/clientes/1/pedidos"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Pedido Por Numero",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/pedidos/numero/PED1234567890"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Status do Pedido",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/pedidos/1/status?status=CONFIRMADO",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pedidos",
+								"1",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "CONFIRMADO"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelar Pedido",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/api/pedidos/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Calcular Valor Total Pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itens\": \r\n    [\r\n        {\r\n            \"produtoId\": 1,\r\n            \"quantidade\": 2\r\n        },\r\n        {\r\n            \"produtoId\": 2,\r\n            \"quantidade\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/pedidos/calcular"
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar Item ao Pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/1/itens?produtoId=1&quantidade=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"1",
+								"itens"
+							],
+							"query": [
+								{
+									"key": "produtoId",
+									"value": "1"
+								},
+								{
+									"key": "quantidade",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirmar Pedido",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:8080/pedidos/1/confirmar"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Pedidos por Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/pedidos/clientes/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelar Pedido",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:8080/pedidos/1/cancelar"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
