@@ -12,7 +12,8 @@ public interface ProdutoService {
     ProdutoResponseDTO buscarProdutoPorId(Long id);
     ProdutoResponseDTO  atualizarProduto(Long id, ProdutoRequestDTO  produtoRequestDTO);
     ProdutoResponseDTO ativarDesativarProduto(Long id);
-    ProdutoResponseDTO alterarDisponibilidade(Long id, Boolean disponivel);
+    ProdutoResponseDTO alterarDisponibilidade(Long id);
+
     List<ProdutoResponseDTO > buscarProdutosPorNome(String nome);
     List<ProdutoResponseDTO > buscarProdutosPorRestaurante(Long restauranteId);
     List<ProdutoResponseDTO > buscarProdutosPorCategoria(String categoria);
@@ -20,5 +21,7 @@ public interface ProdutoService {
                                                           BigDecimal precoMaximo);
     List<ProdutoResponseDTO> buscarTodosProdutos();
     List<ProdutoResponseDTO> buscarPorPrecoMenorOuIgual(BigDecimal valor);
+
+    void removerProduto(Long id);
 }
 

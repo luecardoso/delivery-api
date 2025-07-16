@@ -2,6 +2,8 @@ package com.deliverytech.delivery.repository;
 
 import com.deliverytech.delivery.entity.Restaurante;
 import com.deliverytech.delivery.projection.RelatorioVendas;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -55,4 +57,13 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
             "GROUP BY r.id, r.nome")
     List<RelatorioVendas> relatorioVendasPorRestaurante();
 
+//    @Query
+//    Page<Restaurante> findAll(String categoria, Boolean ativo, Pageable pageable);
+
+    @Query("SELECT r FROM Restaurante r WHERE " +
+            "(:categoria IS NULL OR r.categoria = :categoria) AND " +
+            "(:ativo IS NULL OR r.ativo = :ativo)")
+    Page<Restaurante> findByFilters(@Param("categoria") String categoria,
+                                    @Param("ativo") Boolean ativo,
+                                    Pageable pageable);
 }

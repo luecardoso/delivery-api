@@ -23,6 +23,8 @@ public class Restaurante {
     private boolean ativo;
     private Integer tempoEntregaMinutos;
 
+    private String horarioFuncionamento;
+
     @OneToMany(mappedBy = "restaurante")
     @JsonIgnore
     private List<Produto> produtos;
@@ -136,6 +138,14 @@ public class Restaurante {
         this.tempoEntregaMinutos = tempoEntregaMinutos;
     }
 
+    public String getHorarioFuncionamento() {
+        return horarioFuncionamento;
+    }
+
+    public void setHorarioFuncionamento(String horarioFuncionamento) {
+        this.horarioFuncionamento = horarioFuncionamento;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -155,6 +165,7 @@ public class Restaurante {
                 "telefone='" + getTelefone() + '\'' +
                 ", taxaEntrega=" + getTaxaEntrega() +
                 ", nome='" + getNome() + '\'' +
+                ", horarioFuncionamento='" + getHorarioFuncionamento() + '\'' +
                 ", endereco='" + getEndereco() + '\'' +
                 ", id=" + getId() +
                 ", categoria='" + getCategoria() + '\'' +

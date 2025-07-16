@@ -3,6 +3,7 @@ package com.deliverytech.delivery.dto.response;
 import com.deliverytech.delivery.dto.request.ItemPedidoRequestDTO;
 import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.entity.Restaurante;
+import com.deliverytech.delivery.enums.StatusPedido;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ public class PedidoResponseDTO {
     private Long id;
     private String numeroPedido;
     private LocalDateTime dataPedido;
-    private String status;
+    private StatusPedido status;
     private BigDecimal valorTotal;
     private String observacoes;
     private Cliente cliente;
@@ -28,7 +29,7 @@ public class PedidoResponseDTO {
 
     public PedidoResponseDTO(Cliente cliente, LocalDateTime dataPedido, String enderecoEntrega, Long id,
                              List<ItemPedidoRequestDTO> itens, String numeroPedido, String observacoes,
-                             Restaurante restaurante, String status, BigDecimal taxaEntrega, BigDecimal valorTotal) {
+                             Restaurante restaurante, StatusPedido status, BigDecimal taxaEntrega, BigDecimal valorTotal) {
         this.cliente = cliente;
         this.dataPedido = dataPedido;
         this.enderecoEntrega = enderecoEntrega;
@@ -106,11 +107,11 @@ public class PedidoResponseDTO {
         this.restaurante = restaurante;
     }
 
-    public String getStatus() {
+    public StatusPedido getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusPedido status) {
         this.status = status;
     }
 

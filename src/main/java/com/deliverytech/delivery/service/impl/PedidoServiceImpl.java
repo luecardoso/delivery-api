@@ -1,7 +1,9 @@
 package com.deliverytech.delivery.service.impl;
 
+import com.deliverytech.delivery.dto.request.CalculoPedidoRequestDTO;
 import com.deliverytech.delivery.dto.request.ItemPedidoRequestDTO;
 import com.deliverytech.delivery.dto.request.PedidoRequestDTO;
+import com.deliverytech.delivery.dto.response.CalculoPedidoResponseDTO;
 import com.deliverytech.delivery.dto.response.PedidoResponseDTO;
 import com.deliverytech.delivery.entity.*;
 import com.deliverytech.delivery.enums.StatusPedido;
@@ -14,10 +16,13 @@ import com.deliverytech.delivery.repository.RestauranteRepository;
 import com.deliverytech.delivery.service.PedidoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +157,7 @@ public class PedidoServiceImpl implements PedidoService {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado com ID: " + id));
         // Atualizar status do pedido
-        isTransicaoValida(status, status);
+        isTransicaoValida(pedido.getStatus(), status);
         if (!isTransicaoValida(pedido.getStatus(), status)) {
             throw new BusinessException("Transição de status inválida para o pedido com ID: " + id);
         }
@@ -163,8 +168,24 @@ public class PedidoServiceImpl implements PedidoService {
         return modelMapper.map(pedidoAtualizado, PedidoResponseDTO.class);
     }
 
+    private boolean isTransicaoValida(StatusPedido statusAtual, StatusPedido novoStatus) {
+        // Implementar lógica de transições válidas
+        switch (statusAtual) {
+            case PENDENTE:
+                return novoStatus == StatusPedido.CONFIRMADO || novoStatus == StatusPedido.CANCELADO;
+            case CONFIRMADO:
+                return novoStatus == StatusPedido.PREPARANDO || novoStatus == StatusPedido.CANCELADO;
+            case PREPARANDO:
+                return novoStatus == StatusPedido.SAIU_PARA_ENTREGA;
+            case SAIU_PARA_ENTREGA:
+                return novoStatus == StatusPedido.ENTREGUE;
+            default:
+                return false;
+        }
+    }
+
     @Override
-    public List<PedidoResponseDTO> buscarPedidosPorRestaurante(Long restauranteId) {
+    public List<PedidoResponseDTO> buscarPedidosPorRestaurante(Long restauranteId, StatusPedido status) {
         // Buscar pedidos por cliente ID
         List<Pedido> pedidos = pedidoRepository.findByRestauranteId(restauranteId);
         if (pedidos.isEmpty()) {
@@ -175,6 +196,7 @@ public class PedidoServiceImpl implements PedidoService {
                 .map(pedido -> modelMapper.map(pedido, PedidoResponseDTO.class))
                 .toList();
     }
+
 
     @Override
     public BigDecimal calcularTotalPedido(List<ItemPedidoRequestDTO> itens) {
@@ -209,20 +231,9 @@ public class PedidoServiceImpl implements PedidoService {
         return modelMapper.map(pedido, PedidoResponseDTO.class);
     }
 
-    private boolean isTransicaoValida(StatusPedido statusAtual, StatusPedido novoStatus) {
-        // Implementar lógica de transições válidas
-        switch (statusAtual) {
-            case PENDENTE:
-                return novoStatus == StatusPedido.CONFIRMADO || novoStatus == StatusPedido.CANCELADO;
-            case CONFIRMADO:
-                return novoStatus == StatusPedido.PREPARANDO || novoStatus == StatusPedido.CANCELADO;
-            case PREPARANDO:
-                return novoStatus == StatusPedido.SAIU_PARA_ENTREGA;
-            case SAIU_PARA_ENTREGA:
-                return novoStatus == StatusPedido.ENTREGUE;
-            default:
-                return false;
-        }
+    @Override
+    public Page<PedidoResponseDTO> listarPedidosComPaginacao(StatusPedido status, LocalDate dataInicio, LocalDate dataFim, Pageable pageable) {
+        return null;
     }
 
     private boolean podeSerCancelado(StatusPedido status) {

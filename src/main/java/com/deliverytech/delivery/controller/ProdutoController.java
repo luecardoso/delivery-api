@@ -1,8 +1,14 @@
 package com.deliverytech.delivery.controller;
 
 import com.deliverytech.delivery.dto.request.ProdutoRequestDTO;
+import com.deliverytech.delivery.dto.response.ApiResponseWrapper;
 import com.deliverytech.delivery.dto.response.ProdutoResponseDTO;
 import com.deliverytech.delivery.service.ProdutoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,99 +21,189 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/produtos")
 @CrossOrigin(origins = "*")
+@Tag(name = "Produtos", description = "Operações relacionadas aos produtos")
 public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
 
-    /**
-     * Criar novo produto
-     */
     @PostMapping
-    public ResponseEntity<ProdutoResponseDTO> cadastrarProduto(@Valid @RequestBody ProdutoRequestDTO produtoRequestDTO ) {
-        ProdutoResponseDTO produtoResponseDTO = produtoService.cadastrarProduto(produtoRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoResponseDTO);
+    @Operation(summary = "Cadastrar produto",
+            description = "Cria um novo produto no sistema")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "409", description = "Produto não encontrado")
+    })
+    public ResponseEntity<ApiResponseWrapper<ProdutoResponseDTO>> cadastrarProduto(@Valid @RequestBody
+                                                                                   @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                                                                           description = "Dados do produto a ser criado"
+                                                                                   )
+                                                                                   ProdutoRequestDTO produtoRequestDTO) {
+        ProdutoResponseDTO produto = produtoService.cadastrarProduto(produtoRequestDTO);
+        ApiResponseWrapper<ProdutoResponseDTO> response =
+                new ApiResponseWrapper<>(true, produto, "Produto criado com sucesso");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
     }
 
-    /**
-     * Buscar produto por ID
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarProdutoPorId(@PathVariable Long id) {
+    @Operation(summary = "Buscar produto por ID",
+            description = "Recupera um produto específico pelo ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produto encontrado"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    })
+    public ResponseEntity<ApiResponseWrapper<ProdutoResponseDTO>> buscarProdutoPorId(@Parameter(description = "ID do produto")
+                                                                                     @PathVariable Long id) {
         ProdutoResponseDTO produto = produtoService.buscarProdutoPorId(id);
-        return ResponseEntity.ok(produto);
+        ApiResponseWrapper<ProdutoResponseDTO> response =
+                new ApiResponseWrapper<>(true, produto, "Produto encontrado");
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * Listar produtos por restaurante
-     */
     @GetMapping("/restaurantes/{restauranteId}/produtos")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutosPorRestaurante(@PathVariable Long restauranteId) {
+    @Operation(summary = "Buscar produtos por restaurante",
+            description = "Lista todos os produtos de um restaurante específico pelo ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados"),
+            @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
+    })
+    public ResponseEntity<ApiResponseWrapper<List<ProdutoResponseDTO>>> buscarProdutosPorRestaurante(@PathVariable Long restauranteId) {
         List<ProdutoResponseDTO> produtos = produtoService.buscarProdutosPorRestaurante(restauranteId);
-        return ResponseEntity.ok(produtos);
+        ApiResponseWrapper<List<ProdutoResponseDTO>> response =
+                new ApiResponseWrapper<>(true, produtos, "Produto encontrado");
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * Buscar por categoria
-     */
     @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutosPorCategoria(@PathVariable String categoria) {
+    @Operation(summary = "Buscar por categoria",
+            description = "Lista produtos de uma categoria específica")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados")
+    })
+    public ResponseEntity<ApiResponseWrapper<List<ProdutoResponseDTO>>> buscarProdutosPorCategoria(@Parameter(description = "Categoria do produto")
+                                                                                                   @PathVariable String categoria) {
         List<ProdutoResponseDTO> produtos = produtoService.buscarProdutosPorCategoria(categoria);
-        return ResponseEntity.ok(produtos);
+        ApiResponseWrapper<List<ProdutoResponseDTO>> response =
+                new ApiResponseWrapper<>(true, produtos, "Produtos encontrados");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/buscar/{nome}")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutoPorNome(@PathVariable String nome) {
-        List<ProdutoResponseDTO> produto = produtoService.buscarProdutosPorNome(nome);
-        return ResponseEntity.ok(produto);
+    @Operation(summary = "Buscar produto por nome",
+            description = "Recupera os detalhes de um produto específico pelo nome")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    })
+    public ResponseEntity<ApiResponseWrapper<List<ProdutoResponseDTO>>> buscarProdutoPorNome(@Parameter(description = "Nome do produto")
+                                                                                             @RequestParam String nome) {
+        List<ProdutoResponseDTO> produtos = produtoService.buscarProdutosPorNome(nome);
+        ApiResponseWrapper<List<ProdutoResponseDTO>> response =
+                new ApiResponseWrapper<>(true, produtos, "Busca realizada com sucesso");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscarTodosProdutos() {
+    @Operation(summary = "Listar todos os produtos",
+            description = "Lista todos os produtos disponíveis no sistema")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista de produtos recuperada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Nenhum produto encontrado")
+    })
+    public ResponseEntity<ApiResponseWrapper<List<ProdutoResponseDTO>>> buscarTodosProdutos() {
         List<ProdutoResponseDTO> produtos = produtoService.buscarTodosProdutos();
-        return ResponseEntity.ok(produtos);
+        ApiResponseWrapper<List<ProdutoResponseDTO>> response =
+                new ApiResponseWrapper<>(true, produtos, "Produtos encontrados");
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * Atualizar produto
-     */
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarProduto(@PathVariable Long id,
-                                       @Valid @RequestBody ProdutoRequestDTO produtoRequestDTO) {
+    @Operation(summary = "Atualizar produto",
+            description = "Atualiza os dados de um produto existente")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    })
+    public ResponseEntity<ApiResponseWrapper<ProdutoResponseDTO>> atualizarProduto(@Parameter(description = "ID do produto")
+                                                                                   @PathVariable Long id,
+                                                                                   @Valid @RequestBody ProdutoRequestDTO produtoRequestDTO) {
         ProdutoResponseDTO produtoAtualizado = produtoService.atualizarProduto(id, produtoRequestDTO);
-        return ResponseEntity.ok(produtoAtualizado);
+        ApiResponseWrapper<ProdutoResponseDTO> response =
+                new ApiResponseWrapper<>(true, produtoAtualizado, "Produto encontrado");
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * Alterar disponibilidade
-     */
     @PatchMapping("/{id}/disponibilidade")
-    public ResponseEntity<Void> atualizarDisponibilidade(@PathVariable Long id,
-                                             @RequestParam boolean disponibilidade) {
-        produtoService.alterarDisponibilidade(id, disponibilidade);
-        return ResponseEntity.noContent().build();
+    @Operation(summary = "Alterar disponibilidade", description = "Alterna a disponibilidade do produto")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Disponibilidade alterada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    })
+    public ResponseEntity<ApiResponseWrapper<ProdutoResponseDTO>> atualizarDisponibilidade(@Parameter(description = "ID do produto")
+                                                                                           @PathVariable Long id) {
+        //Verificar métodos inexistente
+        ProdutoResponseDTO produtoResponseDTO = produtoService.alterarDisponibilidade(id);
+        produtoService.alterarDisponibilidade(id);
+        ApiResponseWrapper<ProdutoResponseDTO> response =
+                new ApiResponseWrapper<>(true, produtoResponseDTO, "Produto encontrado");
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * Buscar por faixa de preço
-     */
     @GetMapping("/buscar/preco")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscaPorPreco(@RequestParam("precoMinimo") BigDecimal precoMinimo,
-                                                       @RequestParam("precoMaximo") BigDecimal precoMaximo){
+    @Operation(summary = "Buscar produtos por faixa de preço",
+            description = "Lista todos os produtos dentro de uma faixa de preço específica")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados"),
+            @ApiResponse(responseCode = "404", description = "Nenhum produto encontrado na faixa de preço")
+    })
+    public ResponseEntity<ApiResponseWrapper<List<ProdutoResponseDTO>>> buscaPorPreco(@RequestParam("precoMinimo") BigDecimal precoMinimo,
+                                                                                      @RequestParam("precoMaximo") BigDecimal precoMaximo) {
         List<ProdutoResponseDTO> produtos = produtoService.buscarProdutosPorFaixaPreco(precoMinimo, precoMaximo);
-        return ResponseEntity.ok(produtos);
+        ApiResponseWrapper<List<ProdutoResponseDTO>> response =
+                new ApiResponseWrapper<>(true, produtos, "Produto encontrado");
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDTO> ativarDesativarProduto(@PathVariable Long id) {
+    @Operation(summary = "Ativar/Desativar produto",
+            description = "Ativa ou desativa um produto pelo ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produto ativado/desativado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    })
+    public ResponseEntity<ApiResponseWrapper<ProdutoResponseDTO>> ativarDesativarProduto(@PathVariable Long id) {
         ProdutoResponseDTO produtoAtualizado = produtoService.ativarDesativarProduto(id);
-        return ResponseEntity.ok(produtoAtualizado);
+        ApiResponseWrapper<ProdutoResponseDTO> response =
+                new ApiResponseWrapper<>(true, produtoAtualizado, "Produto encontrado");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/buscar/preco/{valor}")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscarPorPrecoMenorOuIgual(@PathVariable BigDecimal valor) {
+    @Operation(summary = "Buscar produtos por preço menor ou igual",
+            description = "Lista todos os produtos com preço menor ou igual ao valor especificado")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados"),
+            @ApiResponse(responseCode = "404", description = "Nenhum produto encontrado com preço menor ou igual ao valor especificado")
+    })
+    public ResponseEntity<ApiResponseWrapper<List<ProdutoResponseDTO>>> buscarPorPrecoMenorOuIgual(@PathVariable BigDecimal valor) {
         List<ProdutoResponseDTO> produtos = produtoService.buscarPorPrecoMenorOuIgual(valor);
-        return ResponseEntity.ok(produtos);
+        ApiResponseWrapper<List<ProdutoResponseDTO>> response =
+                new ApiResponseWrapper<>(true, produtos, "Produto encontrado");
+        return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Remover produto", description = "Remove um produto do sistema")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produto removido com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
+    public ResponseEntity<Void> removerProduto(@Parameter(description = "ID do produto")
+                                               @PathVariable Long id) {
+        produtoService.removerProduto(id);
+        return ResponseEntity.noContent().build();
+    }
 }

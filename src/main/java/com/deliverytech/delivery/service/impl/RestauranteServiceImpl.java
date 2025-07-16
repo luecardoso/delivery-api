@@ -4,11 +4,14 @@ import com.deliverytech.delivery.dto.request.RestauranteRequestDTO;
 import com.deliverytech.delivery.dto.response.RestauranteResponseDTO;
 import com.deliverytech.delivery.entity.Restaurante;
 import com.deliverytech.delivery.exceptions.BusinessException;
+import com.deliverytech.delivery.exceptions.EntityNotFoundException;
 import com.deliverytech.delivery.projection.RelatorioVendas;
 import com.deliverytech.delivery.repository.RestauranteRepository;
 import com.deliverytech.delivery.service.RestauranteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +49,7 @@ public class RestauranteServiceImpl implements RestauranteService {
     public RestauranteResponseDTO buscarRestaurantePorId(Long id) {
         // Buscar restaurante por ID
         Restaurante restaurante = restauranteRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Restaurante não encontrado com ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Restaurante não encontrado com ID: " + id));
         // Converter entidade para DTO
         return modelMapper.map(restaurante, RestauranteResponseDTO.class);
     }
@@ -185,5 +188,25 @@ public class RestauranteServiceImpl implements RestauranteService {
     @Override
     public BigDecimal calcularTaxaEntrega(Long restauranteId, String cep) {
         return null;
+    }
+
+    @Override
+    public Page<RestauranteResponseDTO> buscarRestaurantesComPaginacao(String categoria, Boolean ativo, Pageable pageable) {
+        Page<Restaurante> restaurantes = restauranteRepository.findByFilters(categoria, ativo, pageable);
+        return restaurantes.map(this::converterParaDTO);
+    }
+
+    @Override
+    public List<RestauranteResponseDTO> buscarRestaurantesProximos(String cep, Integer raio) {
+        return List.of();
+    }
+
+    private RestauranteResponseDTO converterParaDTO(Restaurante restaurante) {
+        RestauranteResponseDTO dto = new RestauranteResponseDTO();
+        dto.setId(restaurante.getId());
+        dto.setNome(restaurante.getNome());
+        dto.setCategoria(restaurante.getCategoria());
+        dto.setAtivo(restaurante.isAtivo());
+        return dto;
     }
 }

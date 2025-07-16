@@ -4,7 +4,7 @@ public enum StatusPedido {
 
     PENDENTE("Pendente"),
     CONFIRMADO("Confirmado"),
-    PREPARANDO("Confirmado"),
+    PREPARANDO("Preparando"),
     SAIU_PARA_ENTREGA("Saiu para Entrega"),
     ENTREGUE("Entregue"),
     CANCELADO("Cancelado");

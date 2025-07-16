@@ -97,7 +97,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    public ProdutoResponseDTO alterarDisponibilidade(Long id, Boolean disponivel) {
+    public ProdutoResponseDTO alterarDisponibilidade(Long id) {
         //Buscar produto por ID
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Produto não encontrado com ID: " + id));
@@ -191,5 +191,12 @@ public class ProdutoServiceImpl implements ProdutoService {
         return produtos.stream()
                 .map(produto -> modelMapper.map(produto, ProdutoResponseDTO.class))
                 .toList();
+    }
+
+    @Override
+    public void removerProduto(Long id) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Produto não encontrado com ID: " + id));
+        produtoRepository.deleteById(id);
     }
 }
