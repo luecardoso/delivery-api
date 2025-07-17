@@ -1,5 +1,7 @@
 package com.deliverytech.delivery.dto.request;
 
+import com.deliverytech.delivery.validation.ValidCategoria;
+import com.deliverytech.delivery.validation.ValidTelefone;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
@@ -12,12 +14,13 @@ public class RestauranteRequestDTO {
 
     @Schema(description = "Nome do restaurante", example = "Pizzaria Express", required = true)
     @NotBlank(message = "O nome do restaurante é obrigatório")
-    @Size(min = 3, max = 100, message = "O nome do restaurante deve ter entre 3 e 100 caracteres")
+    @Size(min = 2, max = 100, message = "O nome do restaurante deve ter entre 3 e 100 caracteres")
     private String nome;
 
     //allowableValues = {"Italiana", "Brasileira", "Japonesa", "Mexicana", "Árabe"})
     @Schema(description = "Descrição do restaurante", example = "Melhores pizzas da cidade", required = true)
     @NotBlank(message = "A categoria do restaurante é obrigatória")
+    @ValidCategoria
     private String categoria;
 
     @Schema(description = "Endereço completo do restaurante", example = "Rua das Flores, 123 - Centro", required = true)
@@ -28,11 +31,13 @@ public class RestauranteRequestDTO {
     @Schema(description = "Telefone do restaurante", example = "11999999999", required = true)
     @NotBlank(message = "telefone é obrigatório")
     @Pattern(regexp = "^\\+?[0-9]{10,11}$", message = "O telefone deve ser um número válido com 10 a 11 dígitos")
+    @ValidTelefone
     private String telefone;
 
     @Schema(description = "Taxa de entrega do restaurante", example = "5.00", minimum = "0", required = true)
     @NotNull(message = "A taxa de entrega do restaurante é obrigatória")
-    @DecimalMin(value = "0.0", message = "Taxa de entrega deve ser posiꢀva")
+    @DecimalMin(value = "0.0", inclusive = false,message = "Taxa de entrega deve ser posiꢀva")
+    @DecimalMax(value = "50.0", message = "Taxa de entrega não pode exceder R$ 50,00")
     private BigDecimal taxaEntrega;
 
     @Schema(description = "Avaliação do restaurante", example = "4.5")
@@ -47,7 +52,6 @@ public class RestauranteRequestDTO {
     @Min(value = 10, message = "Tempo mínimo é 10 minutos")
     @Max(value = 120, message = "Tempo máximo é 120 minutos")
     private Integer tempoEntregaMinutos;
-
 
     @Schema(description = "Horário de funcionamento", example = "08:00-22:00")
     @NotBlank(message = "Horário de funcionamento é obrigatório")

@@ -14,12 +14,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -29,6 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/restaurantes")
 @CrossOrigin(origins = "*")
+@Validated
 @Tag(name = "Restaurantes", description = "Operações relacionadas aos restaurantes")
 public class RestauranteController {
 
@@ -65,7 +68,7 @@ public class RestauranteController {
             @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
     })
     public ResponseEntity<ApiResponseWrapper<RestauranteResponseDTO>> buscarPorId(
-            @Parameter(description = "ID do restaurante")
+            @Parameter(description = "ID do restaurante") @Positive(message = "ID deve ser positivo")
             @PathVariable Long id) {
 
         RestauranteResponseDTO restaurante = restauranteService.buscarRestaurantePorId(id);
@@ -159,7 +162,7 @@ public class RestauranteController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     public ResponseEntity<ApiResponseWrapper<RestauranteResponseDTO>> atualizarRestaurante(@Parameter(description = "ID do restaurante")
-                                                                                           @PathVariable Long id,
+                                                                                           @PathVariable @Positive(message = "ID deve ser positivo") Long id,
                                                                                            @Valid @RequestBody
                                                                                            RestauranteRequestDTO restauranteRequestDTO) {
         RestauranteResponseDTO restauranteAtualizado = restauranteService.atualizarRestaurante(id, restauranteRequestDTO);
@@ -169,14 +172,14 @@ public class RestauranteController {
     }
 
     @PatchMapping("/{id}/status")
-    @Operation(summary = "Aꢀvar/Desaꢀvar restaurante",
+    @Operation(summary = "Ativar/Desativar restaurante",
             description = "Alterna o status aꢀvo/inaꢀvo do restaurante")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Status alterado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
     })
     public ResponseEntity<ApiResponseWrapper<RestauranteResponseDTO>> ativarDesativarRestaurante
-            (@Parameter(description = "ID do restaurante")
+            (@Parameter(description = "ID do restaurante") @Positive(message = "ID deve ser positivo")
              @PathVariable Long id) {
         RestauranteResponseDTO restauranteAtualizado = restauranteService.ativarDesativarRestaurante(id);
         ApiResponseWrapper<RestauranteResponseDTO> response =
@@ -191,7 +194,8 @@ public class RestauranteController {
             @ApiResponse(responseCode = "200", description = "Taxa calculada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
     })
-    public ResponseEntity<ApiResponseWrapper<BigDecimal>> calcularTaxaEntrega(@Parameter(description = "ID do restaurante") @PathVariable Long id,
+    public ResponseEntity<ApiResponseWrapper<BigDecimal>> calcularTaxaEntrega(@Parameter(description = "ID do restaurante")
+                                                                              @PathVariable @Positive(message = "ID deve ser positivo") Long id,
                                                                               @Parameter(description = "CEP de destino") @PathVariable String cep) {
         BigDecimal taxaEntrega = restauranteService.calcularTaxaEntrega(id, cep);
         ApiResponseWrapper<BigDecimal> response =
@@ -250,7 +254,9 @@ public class RestauranteController {
             @ApiResponse(responseCode = "200", description = "Restaurante inativado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
     })
-    public ResponseEntity<ApiResponseWrapper<RestauranteResponseDTO>> inativarRestaurante(@PathVariable Long id) {
+    public ResponseEntity<ApiResponseWrapper<RestauranteResponseDTO>> inativarRestaurante(@PathVariable
+                                                                                          @Positive(message = "ID deve ser positivo")
+                                                                                          Long id) {
         RestauranteResponseDTO restauranteInativado = restauranteService.ativarDesativarRestaurante(id);
         ApiResponseWrapper<RestauranteResponseDTO> response =
                 new ApiResponseWrapper<>(true, restauranteInativado, "Status alterado com sucesso");
@@ -296,7 +302,6 @@ public class RestauranteController {
 //        ApiResponseWrapper<List<RestauranteResponseDTO>> response = new ApiResponseWrapper<>(true, restaurantes, "Busca Realizada com sucesso");
 //        return ResponseEntity.ok(response);
 //    }
-
 
 
 }

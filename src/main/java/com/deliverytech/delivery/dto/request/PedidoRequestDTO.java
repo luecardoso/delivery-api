@@ -1,7 +1,9 @@
 package com.deliverytech.delivery.dto.request;
 
+import com.deliverytech.delivery.validation.ValidCEP;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,22 +26,37 @@ public class PedidoRequestDTO {
     private BigDecimal valorTotal;
 
     @Schema(description = "Observações do pedido", example = "Não colocar cebola")
+    @Size(max = 500, message = "Observações não podem exceder 500 caracteres")
     private String observacoes;
 
     @Schema(description = "ID do Cliente", example = "1", required = true)
     @NotNull(message = "O id do cliente é obrigatório")
+    @Positive(message = "Cliente ID deve ser positivo")
     private Long clienteId;
 
     @Schema(description = "ID do restaurante", example = "1", required = true)
     @NotNull(message = "O restaurante é obrigatório")
+    @Positive(message = "Restaurante ID deve ser positivo")
     private Long restauranteId;
 
     @Schema(description = "Endereço de entrega do pedido", example = "Rua das Flores, 123")
+    @Size(max = 200, message = "Endereço não pode exceder 200 caracteres")
     private String enderecoEntrega;
 
     @Schema(description = "Lista de itens do pedido", required = true)
     @NotNull(message = "Os itens são obrigatórios")
+    @NotEmpty(message = "Lista de itens não pode estar vazia")
+    @Valid
     private List<ItemPedidoRequestDTO> itens;
+
+    @NotBlank(message = "CEP é obrigatório")
+    @ValidCEP
+    private String cep;
+
+    @NotBlank(message = "Forma de pagamento é obrigatória")
+    @Pattern(regexp = "^(DINHEIRO|CARTAO_CREDITO|CARTAO_DEBITO|PIX)$",
+            message = "Forma de pagamento deve ser: DINHEIRO, CARTAO_CREDITO, CARTAO_DEBITO ou PIX")
+    private String formaPagamento;
 
     public PedidoRequestDTO() {
     }

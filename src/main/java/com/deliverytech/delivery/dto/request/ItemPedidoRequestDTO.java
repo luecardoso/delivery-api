@@ -1,10 +1,7 @@
 package com.deliverytech.delivery.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 import java.util.Objects;
 
@@ -22,6 +19,9 @@ public class ItemPedidoRequestDTO {
     @Min(value = 1, message = "A quantidade deve ser pelo menos 1")
     @Max(value = 10, message = "A quantidade não pode ser maior que 100")
     private Integer quantidade;
+
+    @Size(max = 200, message = "Observações não podem exceder 200 caracteres")
+    private String observacoes;
 
     public ItemPedidoRequestDTO() {
     }
