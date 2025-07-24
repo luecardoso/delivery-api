@@ -33,4 +33,6 @@ public interface PedidoService {
 
     Page<PedidoResponseDTO> listarPedidosComPaginacao(StatusPedido status, LocalDate dataInicio,
                                                       LocalDate dataFim, Pageable pageable);
+
+    Page<PedidoResponseDTO> listarPorCliente(Pageable pageable);
 }

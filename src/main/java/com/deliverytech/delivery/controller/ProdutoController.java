@@ -2,17 +2,22 @@ package com.deliverytech.delivery.controller;
 
 import com.deliverytech.delivery.dto.request.ProdutoRequestDTO;
 import com.deliverytech.delivery.dto.response.ApiResponseWrapper;
+import com.deliverytech.delivery.dto.response.PagedResponseWrapper;
 import com.deliverytech.delivery.dto.response.ProdutoResponseDTO;
 import com.deliverytech.delivery.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -28,8 +33,11 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @PostMapping
+    @PreAuthorize("hasRole('RESTAURANTE') || hasRole('ADMIN')")
     @Operation(summary = "Cadastrar produto",
-            description = "Cria um novo produto no sistema")
+            description = "Cria um novo produto no sistema",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            tags = {"Produtos"})
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos"),
@@ -44,8 +52,24 @@ public class ProdutoController {
         ApiResponseWrapper<ProdutoResponseDTO> response =
                 new ApiResponseWrapper<>(true, produto, "Produto criado com sucesso");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
     }
+
+//    @GetMapping
+//    @Operation(summary = "Listar produtos",
+//            description = "Retorna uma lista paginada de produtos. Pode ser filtrada por restaurante, categoria ou disponibilidade.",
+//            tags = {"Produtos"}
+//    )
+//    public ResponseEntity<PagedResponseWrapper<ProdutoResponseDTO>> listar(@Parameter(description = "Informações de paginação") Pageable pageable,
+//                                                                           @Parameter(description = "Filtro por ID do restaurante")
+//                                                                           @RequestParam(required = false) Long restauranteId,
+//                                                                           @Parameter(description = "Filtro por categoria")
+//                                                                           @RequestParam(required = false) String categoria,
+//                                                                           @Parameter(description = "Filtro por disponibilidade")
+//                                                                           @RequestParam(required = false) Boolean disponivel) {
+//
+//        Page<ProdutoResponseDTO> produtos = produtoService.listar(pageable, restauranteId, categoria, disponivel);
+//        return ResponseEntity.ok(produtos);
+//    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar produto por ID",
@@ -107,7 +131,8 @@ public class ProdutoController {
 
     @GetMapping("/buscar")
     @Operation(summary = "Listar todos os produtos",
-            description = "Lista todos os produtos disponíveis no sistema")
+            description = "Lista todos os produtos disponíveis no sistema",
+            tags = {"Produtos"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de produtos recuperada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Nenhum produto encontrado")
@@ -120,6 +145,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') || @produtoService.isOwner(#id)")
     @Operation(summary = "Atualizar produto",
             description = "Atualiza os dados de um produto existente")
     @ApiResponses({
@@ -195,6 +221,7 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') || @produtoService.isOwner(#id)")
     @Operation(summary = "Remover produto", description = "Remove um produto do sistema")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Produto removido com sucesso"),

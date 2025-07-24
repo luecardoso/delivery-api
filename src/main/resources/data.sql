@@ -1,6 +1,23 @@
 -- Dados de exemplo para testes
 -- Arquivo: src/main/resources/data.sql
 
+-- Inserir usuários de teste
+-- Inserindo via DataLoader
+--INSERT INTO usuarios (nome, email, senha, role, ativo, data_criacao, restaurante_id) VALUES
+--('Admin Sistema', 'admin@admin.com',
+--'$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'ADMIN', true,NOW(), null),
+--('João Cliente', 'joaosilva@email.com',
+--'$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'CLIENTE', true,NOW(), null),
+--('Maria Cliente', 'mariasilva@email.com',
+--'$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'CLIENTE', true,NOW(), null),
+--('Pizza Palace', 'pizza@palace.com',
+--'$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'RESTAURANTE',true, NOW(), 1),
+--('Burger King', 'burger@king.com',
+--'$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'RESTAURANTE',true, NOW(), 2),
+--('Carlos Entregador', 'carlos@entrega.com',
+--'$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'ENTREGADOR',true, NOW(), null);
+---- Senha para todos os usuários: "123456"
+
 -- Inserir clientes
 INSERT INTO clientes (nome, email, telefone, endereco, data_cadastro, ativo) VALUES
 ('João Silva', 'joao@email.com', '(11) 99999-1111', 'Rua A, 123 - São Paulo/SP', NOW(), true),

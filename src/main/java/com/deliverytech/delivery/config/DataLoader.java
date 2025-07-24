@@ -1,14 +1,14 @@
 package com.deliverytech.delivery.config;
 
 import com.deliverytech.delivery.entity.*;
+import com.deliverytech.delivery.enums.Role;
 import com.deliverytech.delivery.enums.StatusPedido;
-import com.deliverytech.delivery.repository.ClienteRepository;
-import com.deliverytech.delivery.repository.PedidoRepository;
-import com.deliverytech.delivery.repository.ProdutoRepository;
-import com.deliverytech.delivery.repository.RestauranteRepository;
+import com.deliverytech.delivery.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,6 +30,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private PedidoRepository pedidoRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @Override
     public void run(String... args) throws Exception {
         System.out.println("=== INICIANDO CARGA DE DADOS DE TESTE ===");
@@ -41,6 +44,7 @@ public class DataLoader implements CommandLineRunner {
 //        clienteRepository.deleteAll();
 
         // Inserir dados de teste
+        inserirUsuarios();
         inserirClientes();
         inserirRestaurantes();
         inserirProdutos();
@@ -373,6 +377,74 @@ public class DataLoader implements CommandLineRunner {
             totalPedido = totalPedido.add(item.getSubtotal());
         }
         return totalPedido;
+    }
+
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    private void inserirUsuarios(){
+        //ADMIN
+        Usuario usuario1 = new Usuario();
+        usuario1.setNome("Admin Sistema");
+        usuario1.setEmail("admin@admin.com");
+        usuario1.setSenha(passwordEncoder().encode("123456"));
+        usuario1.setRole(Role.ADMIN);
+        usuario1.setAtivo(true);
+        usuario1.setDataCriacao(LocalDateTime.now());
+        usuario1.setRestauranteId(null);
+
+        //CLIENTE 1
+        Usuario usuario2 = new Usuario();
+        usuario2.setNome("João Cliente");
+        usuario2.setEmail("joaocliente@email.com");
+        usuario2.setSenha(passwordEncoder().encode("123456"));
+        usuario2.setRole(Role.CLIENTE);
+        usuario2.setAtivo(true);
+        usuario2.setDataCriacao(LocalDateTime.now());
+        usuario2.setRestauranteId(null);
+
+        //CLIENTE 2
+        Usuario usuario3 = new Usuario();
+        usuario3.setNome("Maria Cliente");
+        usuario3.setEmail("mariacliente@email.com");
+        usuario3.setSenha(passwordEncoder().encode("123456"));
+        usuario3.setRole(Role.CLIENTE);
+        usuario3.setAtivo(true);
+        usuario3.setDataCriacao(LocalDateTime.now());
+        usuario3.setRestauranteId(null);
+
+        //RESTAURANTE 1
+        Usuario usuario4 = new Usuario();
+        usuario4.setNome("Pizza Palace");
+        usuario4.setEmail("pizza@palace.com");
+        usuario4.setSenha(passwordEncoder().encode("123456"));
+        usuario4.setRole(Role.RESTAURANTE);
+        usuario4.setAtivo(true);
+        usuario4.setDataCriacao(LocalDateTime.now());
+        usuario4.setRestauranteId(1L);
+
+        //RESTAURANTE 2
+        Usuario usuario5 = new Usuario();
+        usuario5.setNome("Burger King");
+        usuario5.setEmail("burger@king.com");
+        usuario5.setSenha(passwordEncoder().encode("123456"));
+        usuario5.setRole(Role.RESTAURANTE);
+        usuario5.setAtivo(true);
+        usuario5.setDataCriacao(LocalDateTime.now());
+        usuario5.setRestauranteId(2L);
+
+        //ENTREGADOR
+        Usuario usuario6 = new Usuario();
+        usuario6.setNome("Carlos Entregador");
+        usuario6.setEmail("carlos@entrega.com");
+        usuario6.setSenha(passwordEncoder().encode("123456"));
+        usuario6.setRole(Role.ENTREGADOR);
+        usuario6.setAtivo(true);
+        usuario6.setDataCriacao(LocalDateTime.now());
+        usuario6.setRestauranteId(null);
+
+        usuarioRepository.saveAll(Arrays.asList(usuario1,usuario2,usuario3,usuario4,usuario5,usuario6));
     }
 
 }

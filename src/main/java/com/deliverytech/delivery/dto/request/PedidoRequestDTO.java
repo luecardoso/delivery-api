@@ -61,11 +61,14 @@ public class PedidoRequestDTO {
     public PedidoRequestDTO() {
     }
 
-    public PedidoRequestDTO(Long clienteId, String dataPedido, String enderecoEntrega, List<ItemPedidoRequestDTO> itens,
-                            String numeroPedido, String observacoes, Long restauranteId, BigDecimal valorTotal) {
+    public PedidoRequestDTO(String cep, Long clienteId, String dataPedido, String enderecoEntrega, String formaPagamento,
+                            List<ItemPedidoRequestDTO> itens, String numeroPedido, String observacoes,
+                            Long restauranteId, BigDecimal valorTotal) {
+        this.cep = cep;
         this.clienteId = clienteId;
         this.dataPedido = dataPedido;
         this.enderecoEntrega = enderecoEntrega;
+        this.formaPagamento = formaPagamento;
         this.itens = itens;
         this.numeroPedido = numeroPedido;
         this.observacoes = observacoes;
@@ -136,6 +139,25 @@ public class PedidoRequestDTO {
     public void setValorTotal(@NotNull(message = "O valor do pedido é obrigatório") BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
+
+    public @NotBlank(message = "CEP é obrigatório") String getCep() {
+        return cep;
+    }
+
+    public void setCep(@NotBlank(message = "CEP é obrigatório") String cep) {
+        this.cep = cep;
+    }
+
+    public @NotBlank(message = "Forma de pagamento é obrigatória") @Pattern(regexp = "^(DINHEIRO|CARTAO_CREDITO|CARTAO_DEBITO|PIX)$",
+            message = "Forma de pagamento deve ser: DINHEIRO, CARTAO_CREDITO, CARTAO_DEBITO ou PIX") String getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(@NotBlank(message = "Forma de pagamento é obrigatória") @Pattern(regexp = "^(DINHEIRO|CARTAO_CREDITO|CARTAO_DEBITO|PIX)$",
+            message = "Forma de pagamento deve ser: DINHEIRO, CARTAO_CREDITO, CARTAO_DEBITO ou PIX") String formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
 
     @Override
     public boolean equals(Object o) {

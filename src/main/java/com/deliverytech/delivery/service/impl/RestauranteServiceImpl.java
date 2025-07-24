@@ -3,15 +3,19 @@ package com.deliverytech.delivery.service.impl;
 import com.deliverytech.delivery.dto.request.RestauranteRequestDTO;
 import com.deliverytech.delivery.dto.response.RestauranteResponseDTO;
 import com.deliverytech.delivery.entity.Restaurante;
+import com.deliverytech.delivery.entity.Usuario;
 import com.deliverytech.delivery.exceptions.BusinessException;
 import com.deliverytech.delivery.exceptions.EntityNotFoundException;
-import com.deliverytech.delivery.projection.RelatorioVendas;
+import com.deliverytech.delivery.repository.projection.RelatorioVendas;
 import com.deliverytech.delivery.repository.RestauranteRepository;
+import com.deliverytech.delivery.security.SecurityUtils;
 import com.deliverytech.delivery.service.RestauranteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -199,6 +203,24 @@ public class RestauranteServiceImpl implements RestauranteService {
     @Override
     public List<RestauranteResponseDTO> buscarRestaurantesProximos(String cep, Integer raio) {
         return List.of();
+    }
+
+    @Override
+    public boolean isOwner(Long restauranteId) {
+        // Passo 1: Obter ID do usuário autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+
+        Usuario userDetails = (Usuario) authentication.getPrincipal();
+        Long usuarioId = userDetails.getId();
+
+        // Passo 2: Buscar ID do proprietário do restaurante
+        Optional<Restaurante> proprietarioId = restauranteRepository.findById(restauranteId);
+
+        // Passo 3: Comparar os IDs
+        return proprietarioId.isPresent() && proprietarioId.get().equals(usuarioId);
     }
 
     private RestauranteResponseDTO converterParaDTO(Restaurante restaurante) {

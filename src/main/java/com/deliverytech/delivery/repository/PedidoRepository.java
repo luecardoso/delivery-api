@@ -3,6 +3,8 @@ package com.deliverytech.delivery.repository;
 import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.entity.Pedido;
 import com.deliverytech.delivery.enums.StatusPedido;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -72,4 +74,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             @Param("inicio") LocalDateTime inicio,
             @Param("fim") LocalDateTime fim,
             @Param("status") StatusPedido status);
+
+    @Query("SELECT p FROM Pedido p " +
+            "WHERE p.cliente = :id " +
+            "ORDER BY p.dataPedido DESC")
+    Page<Pedido> listarPedidosPorClienteAutenticado(Long id, Pageable pageable);
 }

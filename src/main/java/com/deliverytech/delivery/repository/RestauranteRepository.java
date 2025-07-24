@@ -1,7 +1,7 @@
 package com.deliverytech.delivery.repository;
 
 import com.deliverytech.delivery.entity.Restaurante;
-import com.deliverytech.delivery.projection.RelatorioVendas;
+import com.deliverytech.delivery.repository.projection.RelatorioVendas;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

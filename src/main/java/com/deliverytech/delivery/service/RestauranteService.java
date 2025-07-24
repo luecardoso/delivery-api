@@ -2,7 +2,7 @@ package com.deliverytech.delivery.service;
 
 import com.deliverytech.delivery.dto.request.RestauranteRequestDTO;
 import com.deliverytech.delivery.dto.response.RestauranteResponseDTO;
-import com.deliverytech.delivery.projection.RelatorioVendas;
+import com.deliverytech.delivery.repository.projection.RelatorioVendas;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,4 +27,6 @@ public interface RestauranteService {
 
     Page<RestauranteResponseDTO> buscarRestaurantesComPaginacao(String categoria, Boolean ativo, Pageable pageable);
     List<RestauranteResponseDTO> buscarRestaurantesProximos(String cep, Integer raio);
+
+    boolean isOwner(Long restauranteId);
 }

@@ -3,9 +3,8 @@ package com.deliverytech.delivery.controller;
 import com.deliverytech.delivery.dto.request.RestauranteRequestDTO;
 import com.deliverytech.delivery.dto.response.ApiResponseWrapper;
 import com.deliverytech.delivery.dto.response.PagedResponseWrapper;
-import com.deliverytech.delivery.dto.response.ProdutoResponseDTO;
 import com.deliverytech.delivery.dto.response.RestauranteResponseDTO;
-import com.deliverytech.delivery.projection.RelatorioVendas;
+import com.deliverytech.delivery.repository.projection.RelatorioVendas;
 import com.deliverytech.delivery.service.ProdutoService;
 import com.deliverytech.delivery.service.RestauranteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,14 +17,13 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -42,11 +40,13 @@ public class RestauranteController {
     private ProdutoService produtoService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Cadastrar restaurante",
             description = "Cria um novo restaurante no sistema")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Restaurante criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "409", description = "Restaurante já existe")
     })
     public ResponseEntity<ApiResponseWrapper<RestauranteResponseDTO>> cadastrarRestaurante(@Valid @RequestBody
@@ -93,6 +93,22 @@ public class RestauranteController {
         PagedResponseWrapper<RestauranteResponseDTO> response = new PagedResponseWrapper<>(restaurantes);
         return ResponseEntity.ok(response);
     }
+
+//    @GetMapping
+//    @Operation(summary = "Listar todos os restaurantes",
+//            description = "Retorna uma lista paginada de todos os restaurantes disponíveis",
+//            tags = {"Restaurantes"})
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Lista de restaurantes retornada com sucesso",
+//                    content = @Content(mediaType = "application/json",
+//                            schema = @Schema(implementation = RestauranteResponseDTO.class)))
+//    })
+//    public ResponseEntity<Page<RestauranteResponseDTO>> listar(@Parameter(description = "Informações de paginação") Pageable pageable,
+//                                                               @Parameter(description = "Filtro por categoria")
+//                                                               @RequestParam(required = false) String categoria) {
+//        Page<RestauranteResponseDTO> restaurantes = restauranteService.listarTodos(pageable, categoria);
+//        return ResponseEntity.ok(restaurantes);
+//    }
 
     @GetMapping("/categoria/{categoria}")
     @Operation(summary = "Buscar Por Categoria",
@@ -154,6 +170,7 @@ public class RestauranteController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('RESTAURANTE') && @restauranteService.isOwner(#id)")
     @Operation(summary = "Atualizar restaurante",
             description = "Atualiza os dados de um restaurante existente")
     @ApiResponses({

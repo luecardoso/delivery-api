@@ -13,11 +13,14 @@ import com.deliverytech.delivery.repository.ClienteRepository;
 import com.deliverytech.delivery.repository.PedidoRepository;
 import com.deliverytech.delivery.repository.ProdutoRepository;
 import com.deliverytech.delivery.repository.RestauranteRepository;
+import com.deliverytech.delivery.security.SecurityUtils;
 import com.deliverytech.delivery.service.PedidoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -234,6 +238,23 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Page<PedidoResponseDTO> listarPedidosComPaginacao(StatusPedido status, LocalDate dataInicio, LocalDate dataFim, Pageable pageable) {
         return null;
+    }
+
+    //verificar
+    @Override
+    public Page<PedidoResponseDTO> listarPorCliente(Pageable pageable) {
+        // Pega o usuário autenticado
+        Long id = SecurityUtils.getCurrentUserId();
+
+        // Busca o cliente pelo username (ou email, dependendo do seu UserDetails)
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        // Busca os pedidos do cliente
+        Page<Pedido> pedidos = pedidoRepository.listarPedidosPorClienteAutenticado(cliente.getId(), pageable);
+
+        // Converte para DTO
+        return pedidos.map(pedido -> modelMapper.map(pedido, PedidoResponseDTO.class));
     }
 
     private boolean podeSerCancelado(StatusPedido status) {

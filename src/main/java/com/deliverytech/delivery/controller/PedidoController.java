@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -33,14 +35,18 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @PostMapping
+    @PreAuthorize("hasRole('CLIENTE')")
     @Operation(summary = "Criar pedido",
-            description = "Cria um novo pedido no sistema")
+            description = "Cria um novo pedido no sistema",
+            security = @SecurityRequirement(name = "Bearer Authen ca on"),
+            tags = {"Pedidos"})
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos"),
             @ApiResponse(responseCode = "409", description = "Pedido já existe")
     })
-    public ResponseEntity<ApiResponseWrapper<PedidoResponseDTO>> criarPedido(@Valid @RequestBody
+    public ResponseEntity<ApiResponseWrapper<PedidoResponseDTO>> criarPedido(@Parameter(description = "Dados do pedido a ser criado")
+                                                                             @Valid @RequestBody
                                                                              @io.swagger.v3.oas.annotations.parameters.RequestBody(
                                                                                      description = "Dados do pedido a ser criado"
                                                                              )
@@ -68,6 +74,7 @@ public class PedidoController {
 
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Listar pedidos",
             description = "Lista pedidos com Filtros opcionais e paginação")
     @ApiResponses({
@@ -89,6 +96,7 @@ public class PedidoController {
     }
 
     @GetMapping("/clientes/{clienteId}/pedidos")
+    @PreAuthorize("hasRole('CLIENTE')")
     @Operation(summary = "Listar pedidos por cliente",
             description = "Lista todos os pedidos de um cliente específico")
     @ApiResponses({
@@ -119,8 +127,11 @@ public class PedidoController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('RESTAURANTE') or hasRole('ADMIN')")
     @Operation(summary = "Atualizar status do pedido",
-            description = "Atualiza o status de um pedido específico pelo ID")
+            description = "Atualiza o status de um pedido específico pelo ID",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            tags = {"Pedidos"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Status do pedido atualizado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Pedido não encontrado"),
@@ -162,6 +173,7 @@ public class PedidoController {
     }
 
     @GetMapping("/restaurante/{restauranteId}")
+    @PreAuthorize("hasRole('RESTAURANTE')")
     @Operation(summary = "Pedidos do restaurante",
             description = "Lista todos os pedidos de um restaurante")
     @ApiResponses({
@@ -175,6 +187,19 @@ public class PedidoController {
         List<PedidoResponseDTO> pedidos = pedidoService.buscarPedidosPorRestaurante(restauranteId, status);
         ApiResponseWrapper<List<PedidoResponseDTO>> response =
                 new ApiResponseWrapper<>(true, pedidos, "Pedidos recuperados com sucesso");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/meus")
+    @PreAuthorize("hasRole('CLIENTE')")
+    @Operation(summary = "Listar meus pedidos",
+            description = "Retorna os pedidos do cliente autenticado",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            tags = {"Pedidos"})
+    public ResponseEntity<PagedResponseWrapper<PedidoResponseDTO>> listarMeusPedidos(@Parameter(description = "Informações de paginação")
+                                                                     Pageable pageable) {
+        Page<PedidoResponseDTO> pedidos = pedidoService.listarPorCliente(pageable);
+        PagedResponseWrapper<PedidoResponseDTO> response = new PagedResponseWrapper<>(pedidos);
         return ResponseEntity.ok(response);
     }
 }

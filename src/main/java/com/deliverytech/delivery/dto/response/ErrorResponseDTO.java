@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorResponse {
+public class ErrorResponseDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime timestamp;
@@ -18,11 +18,11 @@ public class ErrorResponse {
     private String errorCode;
     private Map<String, String> details;
 
-    public ErrorResponse() {
+    public ErrorResponseDTO() {
         this.timestamp = LocalDateTime.now();
     }
 
-    public ErrorResponse(int status, String error, String message, String path) {
+    public ErrorResponseDTO(int status, String error, String message, String path) {
         this();
         this.status = status;
         this.error = error;
