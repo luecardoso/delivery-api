@@ -47,6 +47,7 @@ public class RestauranteController {
             @ApiResponse(responseCode = "201", description = "Restaurante criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
             @ApiResponse(responseCode = "409", description = "Restaurante já existe")
     })
     public ResponseEntity<ApiResponseWrapper<RestauranteResponseDTO>> cadastrarRestaurante(@Valid @RequestBody

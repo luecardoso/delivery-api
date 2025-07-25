@@ -9,8 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-@Schema(description = "DTO para requisição de pedidos",
-        title = "Pedido Request DTO")
+@Schema(description = "DTO para requisição de pedidos", title = "Pedido Request DTO")
 public class PedidoRequestDTO {
 
     @Schema(description = "Número do pedido", example = "12345", required = true)

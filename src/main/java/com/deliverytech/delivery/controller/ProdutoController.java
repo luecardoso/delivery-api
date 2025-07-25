@@ -33,7 +33,7 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @PostMapping
-    @PreAuthorize("hasRole('RESTAURANTE') || hasRole('ADMIN')")
+    @PreAuthorize("hasRole('RESTAURANTE') or hasRole('ADMIN')")
     @Operation(summary = "Cadastrar produto",
             description = "Cria um novo produto no sistema",
             security = @SecurityRequirement(name = "Bearer Authentication"),
@@ -41,6 +41,7 @@ public class ProdutoController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
             @ApiResponse(responseCode = "409", description = "Produto não encontrado")
     })
     public ResponseEntity<ApiResponseWrapper<ProdutoResponseDTO>> cadastrarProduto(@Valid @RequestBody
@@ -67,7 +68,7 @@ public class ProdutoController {
 //                                                                           @Parameter(description = "Filtro por disponibilidade")
 //                                                                           @RequestParam(required = false) Boolean disponivel) {
 //
-//        Page<ProdutoResponseDTO> produtos = produtoService.listar(pageable, restauranteId, categoria, disponivel);
+//        Page<ProdutoResponseDTO> produtos = produtoService.listarProdutosComPaginacao(pageable, restauranteId, categoria, disponivel);
 //        return ResponseEntity.ok(produtos);
 //    }
 
@@ -129,7 +130,7 @@ public class ProdutoController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/buscar")
+    @GetMapping
     @Operation(summary = "Listar todos os produtos",
             description = "Lista todos os produtos disponíveis no sistema",
             tags = {"Produtos"})

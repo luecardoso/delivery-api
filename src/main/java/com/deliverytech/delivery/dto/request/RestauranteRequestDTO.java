@@ -7,9 +7,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
-@Schema(
-        description = "Dados necessários para criar ou atualizar um restaurante",
-        title = "Restaurante Request DTO")
+@Schema(description = "Dados necessários para criar ou atualizar um restaurante", title = "Restaurante Request DTO")
 public class RestauranteRequestDTO {
 
     @Schema(description = "Nome do restaurante", example = "Pizzaria Express", required = true)

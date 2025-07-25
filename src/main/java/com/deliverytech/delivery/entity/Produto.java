@@ -1,25 +1,42 @@
 package com.deliverytech.delivery.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
 @Table(name = "produtos")
+@Schema(description = "Entidade que representa um produto no sistema")
 public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Identificador único do restaurante", example = "1")
     private Long id;
+
+    @Schema(description = "Nome do produto", example = "Pizza Margherita", required = true)
     private String nome;
+
+    @Schema(description = "Descrição do produto", example = "Deliciosa pizza com molho de tomate, mussarela e manjericão", required = true)
     private String descricao;
+
+    @Schema(description = "Preço do produto", example = "29.90", required = true)
     private BigDecimal preco;
+
+    @Schema(description = "Categoria do produto", example = "Pizzas", required = true)
     private String categoria;
+
+    @Schema(description = "Disponibilidade do produto", example = "true", required = true)
     private Boolean disponivel;
 
     @ManyToOne
     @JoinColumn(name = "restaurante_id")
+    @Schema(description = "Restaurante vinculado ao produto", example = "Pizzaria Bella", required = true)
     private Restaurante restaurante;
 
     public Produto() {

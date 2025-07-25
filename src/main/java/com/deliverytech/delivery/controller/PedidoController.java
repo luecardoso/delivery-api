@@ -195,9 +195,10 @@ public class PedidoController {
     @Operation(summary = "Listar meus pedidos",
             description = "Retorna os pedidos do cliente autenticado",
             security = @SecurityRequirement(name = "Bearer Authentication"),
-            tags = {"Pedidos"})
+            tags = {"Pedidos"}
+    )
     public ResponseEntity<PagedResponseWrapper<PedidoResponseDTO>> listarMeusPedidos(@Parameter(description = "Informações de paginação")
-                                                                     Pageable pageable) {
+                                                                                     Pageable pageable) {
         Page<PedidoResponseDTO> pedidos = pedidoService.listarPorCliente(pageable);
         PagedResponseWrapper<PedidoResponseDTO> response = new PagedResponseWrapper<>(pedidos);
         return ResponseEntity.ok(response);

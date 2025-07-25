@@ -3,6 +3,7 @@ package com.deliverytech.delivery.config;
 import com.deliverytech.delivery.entity.*;
 import com.deliverytech.delivery.enums.Role;
 import com.deliverytech.delivery.enums.StatusPedido;
+import com.deliverytech.delivery.exceptions.BusinessException;
 import com.deliverytech.delivery.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -120,7 +121,8 @@ public class DataLoader implements CommandLineRunner {
     private void inserirProdutos() {
         //Inserindo Produtos
         //-- Restaurante 1
-        Optional<Restaurante> restaurante1 = restauranteRepository.findById(4L);
+        Restaurante restaurante1 = restauranteRepository.findById(4L)
+                .orElseThrow(() -> new BusinessException("Restaurante não encontrado com ID: "));
 
         Produto produto1 = new Produto();
         produto1.setNome("Batata Frita Metade Carne Seca Metade Costela com Catupiry");
@@ -129,7 +131,7 @@ public class DataLoader implements CommandLineRunner {
         produto1.setPreco(BigDecimal.valueOf(29.90));
         produto1.setCategoria("Acompanhamento");
         produto1.setDisponivel(true);
-        produto1.setRestaurante(restaurante1.get());
+        produto1.setRestaurante(restaurante1);
 
         Produto produto2 = new Produto();
         produto2.setNome("Bacon Duplo");
@@ -138,7 +140,7 @@ public class DataLoader implements CommandLineRunner {
         produto2.setPreco(BigDecimal.valueOf(36.90));
         produto2.setCategoria("Lanche");
         produto2.setDisponivel(true);
-        produto2.setRestaurante(restaurante1.get());
+        produto2.setRestaurante(restaurante1);
 
         Produto produto3 = new Produto();
         produto3.setNome("Turbo Queijo");
@@ -147,7 +149,7 @@ public class DataLoader implements CommandLineRunner {
         produto3.setPreco(BigDecimal.valueOf(28.90));
         produto3.setCategoria("Lanche");
         produto3.setDisponivel(true);
-        produto3.setRestaurante(restaurante1.get());
+        produto3.setRestaurante(restaurante1);
 
         //-- Restaurante 2
         Optional<Restaurante> restaurante2 = restauranteRepository.findById(5L);

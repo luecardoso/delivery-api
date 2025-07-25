@@ -5,8 +5,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
-@Schema(description = "DTO para requisição de produtos",
-        title = "Produto Request DTO")
+@Schema(description = "DTO para requisição de produtos", title = "Produto Request DTO")
 public class ProdutoRequestDTO {
 
     @Schema(description = "Nome do produto", example = "Pizza Margherita", required = true)
@@ -103,5 +102,13 @@ public class ProdutoRequestDTO {
         this.restauranteId = restauranteId;
     }
 
+    public @Pattern(regexp = "^(https?://).*\\.(jpg|jpeg|png|gif)$",
+            message = "URL da imagem deve ser válida e ter formato JPG, JPEG, PNG ou GIF") String getImagemUrl() {
+        return imagemUrl;
+    }
 
+    public void setImagemUrl(@Pattern(regexp = "^(https?://).*\\.(jpg|jpeg|png|gif)$",
+            message = "URL da imagem deve ser válida e ter formato JPG, JPEG, PNG ou GIF") String imagemUrl) {
+        this.imagemUrl = imagemUrl;
+    }
 }

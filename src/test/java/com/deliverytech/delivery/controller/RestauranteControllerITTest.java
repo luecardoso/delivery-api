@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,7 @@ public class RestauranteControllerITTest {
         restauranteRequestDTO.setTaxaEntrega(new BigDecimal("5.50"));
         restauranteRequestDTO.setTempoEntregaMinutos(45);
         restauranteRequestDTO.setHorarioFuncionamento("08:00-22:00");
+//        restauranteRequestDTO.setCep("76900-162");
         restauranteRequestDTO.setAtivo(true);
 
         // Criar restaurante para testes de busca
@@ -69,6 +71,7 @@ public class RestauranteControllerITTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void deveCadastrarRestauranteComSucesso() throws Exception {
 
         mockMvc.perform(post("/api/restaurantes")
@@ -83,13 +86,14 @@ public class RestauranteControllerITTest {
                 .andExpect(jsonPath("$.data.taxaEntrega").value(new BigDecimal("5.5")))
                 .andExpect(jsonPath("$.data.ativo").value(true))
                 .andExpect(jsonPath("$.data.tempoEntregaMinutos").value(45))
-//                .andExpect(jsonPath("$.data.cep").value("04433-100"))
+//                .andExpect(jsonPath("$.data.cep").value("76900-162"))
 //                .andExpect(jsonPath("$.data.horarioFuncionamento").value("08:00-22:00"))
                 .andExpect(jsonPath("$.message").value("Restaurante criado com sucesso"));
 
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void deveRejeitarRestauranteComDadosInvalidos() throws Exception {
         restauranteRequestDTO.setNome(""); // Nome inválido
         restauranteRequestDTO.setTelefone("123"); // Telefone inválido
@@ -98,13 +102,14 @@ public class RestauranteControllerITTest {
                         .content(objectMapper.writeValueAsString(restauranteRequestDTO)))
                 .andExpect(status().isBadRequest())
 //                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"));
-//                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"))
-//                .andExpect(jsonPath("$.error.details.nome").exists())
-//                .andExpect(jsonPath("$.error.details.telefone").exists());
+                .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.details.nome").exists())
+                .andExpect(jsonPath("$.details.telefone").exists());
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void deveBuscarRestaurantePorId() throws Exception {
         mockMvc.perform(get("/api/restaurantes/{id}", restauranteSalvo.getId()))
                 .andExpect(status().isOk())
@@ -115,10 +120,11 @@ public class RestauranteControllerITTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void deveRetornar404ParaRestauranteInexistente() throws Exception {
         mockMvc.perform(get("/api/restaurantes/{id}", 999L))
                 .andExpect(status().isNotFound())
-//                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error").value("ENTITY_NOT_FOUND"));
     }
 
@@ -148,6 +154,7 @@ public class RestauranteControllerITTest {
 //    }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void deveAtualizarRestauranteComSucesso() throws Exception {
         restauranteRequestDTO.setNome("Pizza Express Atualizada");
         mockMvc.perform(put("/api/restaurantes/{id}", restauranteSalvo.getId())
@@ -161,6 +168,7 @@ public class RestauranteControllerITTest {
 
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void deveAlterarStatusRestaurante() throws Exception {
         mockMvc.perform(patch("/api/restaurantes/{id}/status", restauranteSalvo.getId()))
                 .andExpect(status().isOk())
@@ -170,6 +178,7 @@ public class RestauranteControllerITTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN","CLIENTE"})
     void deveBuscarRestaurantesPorCategoria() throws Exception {
         mockMvc.perform(get("/api/restaurantes/categoria/{categoria}", "Americana"))
                 .andExpect(status().isOk())

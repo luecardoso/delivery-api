@@ -2,8 +2,7 @@ package com.deliverytech.delivery.controller;
 
 import com.deliverytech.delivery.dto.request.LoginRequestDTO;
 import com.deliverytech.delivery.dto.request.RegisterRequestDTO;
-import com.deliverytech.delivery.dto.response.LoginResponseDTO;
-import com.deliverytech.delivery.dto.response.UserResponseDTO;
+import com.deliverytech.delivery.dto.response.*;
 import com.deliverytech.delivery.entity.Usuario;
 import com.deliverytech.delivery.security.JwtUtil;
 import com.deliverytech.delivery.security.SecurityUtils;
@@ -76,8 +75,8 @@ public class AuthController {
             ),
             @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
     })
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
-        try {
+    public ResponseEntity<ApiResponseWrapper<LoginResponseDTO>> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
+
             // Autenticar usuário
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -94,12 +93,10 @@ public class AuthController {
             UserResponseDTO userResponseDTO = new UserResponseDTO(usuario);
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO(token, jwtExpiration,
                     userResponseDTO);
-            return ResponseEntity.ok(loginResponseDTO);
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(401).body("Credenciais inválidas");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro interno do servidor");
-        }
+
+        ApiResponseWrapper<LoginResponseDTO> response =
+                new ApiResponseWrapper<>(true, loginResponseDTO, "Login realizado com sucesso");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
