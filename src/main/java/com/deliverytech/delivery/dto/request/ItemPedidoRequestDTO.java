@@ -17,7 +17,7 @@ public class ItemPedidoRequestDTO {
     @Schema(description = "Quantidade do produto no pedido", example = "2", required = true)
     @NotNull(message = "A quantidade é obrigatória")
     @Min(value = 1, message = "A quantidade deve ser pelo menos 1")
-    @Max(value = 10, message = "A quantidade não pode ser maior que 100")
+    @Max(value = 99, message = "A quantidade não pode ser maior que 100")
     private Integer quantidade;
 
     @Size(max = 200, message = "Observações não podem exceder 200 caracteres")

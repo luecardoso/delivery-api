@@ -4,10 +4,14 @@ import com.deliverytech.delivery.dto.request.ClienteRequestDTO;
 import com.deliverytech.delivery.dto.response.ClienteResponseDTO;
 import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.exceptions.BusinessException;
+import com.deliverytech.delivery.exceptions.EntityNotFoundException;
 import com.deliverytech.delivery.repository.ClienteRepository;
 import com.deliverytech.delivery.service.ClienteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +33,9 @@ public class ClienteServiceImpl implements ClienteService {
         if (clienteRepository.existsByEmail(clienteRequestDTO.getEmail())) {
             throw new IllegalArgumentException("Email já cadastrado: " + clienteRequestDTO.getEmail());
         }
+        if(clienteRepository.existsByCpf(clienteRequestDTO.getCpf())){
+            throw new IllegalArgumentException("CPF já cadastrado " + clienteRequestDTO.getCpf());
+        }
         // Converter DTO para entidade
         Cliente cliente = modelMapper.map(clienteRequestDTO, Cliente.class);
         cliente.setAtivo(true);
@@ -42,7 +49,7 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponseDTO buscarClientePorId(Long id) {
         // Buscar cliente por ID
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Cliente não encontrado: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado: " + id));
         // Converter entidade para DTO
         return modelMapper.map(cliente, ClienteResponseDTO.class);
     }
@@ -51,7 +58,7 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponseDTO buscarClientePorEmail(String email) {
         // Buscar cliente por email
         Cliente cliente = clienteRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("Cliente não encontrado com email: " + email));
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com email: " + email));
         // Converter entidade para DTO
         return modelMapper.map(cliente, ClienteResponseDTO.class);
     }
@@ -70,13 +77,13 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponseDTO atualizarCliente(Long id, ClienteRequestDTO clienteRequestDTO) {
         // Buscar cliente existente
         Cliente clienteExistente = clienteRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Cliente não encontrado: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado: " + id));
         // Validar dados do cliente
         if (clienteRequestDTO.getNome() == null || clienteRequestDTO.getNome().isEmpty()) {
-            throw new BusinessException("Nome do cliente é obrigatório");
+            throw new EntityNotFoundException("Nome do cliente é obrigatório");
         }
         if (clienteRequestDTO.getEmail() == null || clienteRequestDTO.getEmail().isEmpty()) {
-            throw new BusinessException("Email do cliente é obrigatório");
+            throw new EntityNotFoundException("Email do cliente é obrigatório");
         }
         // Atualizar dados do cliente
         clienteExistente.setNome(clienteRequestDTO.getNome());
@@ -93,7 +100,7 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponseDTO ativarDesativarCliente(Long id) {
         // Buscar cliente existente
         Cliente clienteExistente = clienteRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Cliente não encontrado: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado: " + id));
         // Inverter status de ativo
         clienteExistente.setAtivo(!clienteExistente.isAtivo());
         // Salvar cliente atualizado
@@ -112,4 +119,23 @@ public class ClienteServiceImpl implements ClienteService {
                 .toList();
     }
 
+    @Override
+    public Page<ClienteResponseDTO> listarAtivosPaginado(Pageable pageable) {
+        Page<Cliente> clientePage = clienteRepository.findByAtivoTrue(pageable);
+        return clientePage.map(clientes -> modelMapper.map(clientes, ClienteResponseDTO.class));
+
+    }
+
+    @Override
+    public ResponseEntity<Void> deletarCliente(Long id) {
+        clienteRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ClienteResponseDTO buscarPorCPF(String cpf) {
+        Cliente cliente = clienteRepository.findByCpf(cpf)
+                .orElseThrow(() -> new IllegalArgumentException("CPF já cadastrado"));
+        return modelMapper.map(cliente, ClienteResponseDTO.class);
+    }
 }

@@ -1,5 +1,6 @@
 package com.deliverytech.delivery.dto.request;
 
+import com.deliverytech.delivery.validation.annotation.ValidCPF;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -22,12 +23,16 @@ public class ClienteRequestDTO {
 
     @Schema(description = "Telefone do cliente", example = "+5511999999999", required = true)
     @Pattern(regexp = "^\\+?[0-9]{10,15}$",
-            message = "O telefone deve ser um número válido com 10 a 15 dígitos, podendo iniciar com '+'")
+            message = "O telefone deve ser um número válido com 10 a 15 dígitos")
     private String telefone;
 
     @Schema(description = "Endereço do cliente", example = "Rua das Flores, 123", required = true)
     @NotBlank(message = "O endereço é obrigatório")
     private String endereco;
+
+    @NotBlank(message = "O CPF é obrigatório")
+    @ValidCPF
+    private String cpf;
 
     public ClienteRequestDTO() {
     }
@@ -75,6 +80,14 @@ public class ClienteRequestDTO {
                             message = "O telefone deve ser um número válido com 10 a 15 dígitos, podendo iniciar com '+'")
                             String telefone) {
         this.telefone = telefone;
+    }
+
+    public @NotBlank(message = "O CPF é obrigatório") String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(@NotBlank(message = "O CPF é obrigatório") String cpf) {
+        this.cpf = cpf;
     }
 
     @Override

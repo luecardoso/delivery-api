@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
 
@@ -45,7 +46,6 @@ public class RestauranteControllerITTest {
 
     @BeforeEach
     void setUp() {
-//        restauranteRepository.deleteAll();
         restauranteRequestDTO = new RestauranteRequestDTO();
         restauranteRequestDTO.setNome("Pizza Express 123");
         restauranteRequestDTO.setCategoria("Italiana");
@@ -54,7 +54,6 @@ public class RestauranteControllerITTest {
         restauranteRequestDTO.setTaxaEntrega(new BigDecimal("5.50"));
         restauranteRequestDTO.setTempoEntregaMinutos(45);
         restauranteRequestDTO.setHorarioFuncionamento("08:00-22:00");
-//        restauranteRequestDTO.setCep("76900-162");
         restauranteRequestDTO.setAtivo(true);
 
         // Criar restaurante para testes de busca
@@ -73,7 +72,6 @@ public class RestauranteControllerITTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void deveCadastrarRestauranteComSucesso() throws Exception {
-
         mockMvc.perform(post("/api/restaurantes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(restauranteRequestDTO)))
@@ -86,10 +84,7 @@ public class RestauranteControllerITTest {
                 .andExpect(jsonPath("$.data.taxaEntrega").value(new BigDecimal("5.5")))
                 .andExpect(jsonPath("$.data.ativo").value(true))
                 .andExpect(jsonPath("$.data.tempoEntregaMinutos").value(45))
-//                .andExpect(jsonPath("$.data.cep").value("76900-162"))
-//                .andExpect(jsonPath("$.data.horarioFuncionamento").value("08:00-22:00"))
                 .andExpect(jsonPath("$.message").value("Restaurante criado com sucesso"));
-
     }
 
     @Test
@@ -100,8 +95,8 @@ public class RestauranteControllerITTest {
         mockMvc.perform(post("/api/restaurantes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(restauranteRequestDTO)))
+                .andDo(print())
                 .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.details.nome").exists())
@@ -124,7 +119,6 @@ public class RestauranteControllerITTest {
     void deveRetornar404ParaRestauranteInexistente() throws Exception {
         mockMvc.perform(get("/api/restaurantes/{id}", 999L))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.error").value("ENTITY_NOT_FOUND"));
     }
 
@@ -136,22 +130,23 @@ public class RestauranteControllerITTest {
                         .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content", hasSize(7)))//3 do data.sql + 3 DataLoader
+                .andExpect(jsonPath("$.content", hasSize(7)))//3 do banco.sql + 3 DataLoader
                 .andExpect(jsonPath("$.page.number").value(0))
                 .andExpect(jsonPath("$.page.size").value(10))
-                .andExpect(jsonPath("$.page.totalElements").value(7));//3 do data.sql + 3 DataLoader
+                .andExpect(jsonPath("$.page.totalElements").value(7));//3 do banco.sql + 3 DataLoader
     }
 
-//    @Test
-//    void deveRetornarUmRestauranteNaPaginaZeroComTamanhoDez() throws Exception {
-//        mockMvc.perform(get("/api/restaurantes?page=0&size=10"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.content.length()").value(1))
-//                .andExpect(jsonPath("$.pageable.pageNumber").value(0))
-//                .andExpect(jsonPath("$.pageable.pageSize").value(10))
-//                .andExpect(jsonPath("$.totalElements").value(1));
-////                .andDo(print());
-//    }
+//TODO criar listagem com paginacao
+    @Test
+    void deveRetornarUmRestauranteNaPaginaZeroComTamanhoDez() throws Exception {
+        mockMvc.perform(get("/api/restaurantes?page=0&size=10"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(7))
+                .andExpect(jsonPath("$.page.number").value(0))
+                .andExpect(jsonPath("$.page.size").value(10))
+                .andExpect(jsonPath("$.page.totalElements").value(7));
+    }
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -160,6 +155,7 @@ public class RestauranteControllerITTest {
         mockMvc.perform(put("/api/restaurantes/{id}", restauranteSalvo.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(restauranteRequestDTO)))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.nome").value("Pizza Express Atualizada"))

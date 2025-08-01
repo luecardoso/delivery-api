@@ -82,4 +82,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseDTO,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponseDTO> handleBusinessException(
+            Exception ex, WebRequest request) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", "")
+        );
+        errorResponseDTO.setErrorCode("BAD_REQUEST");
+        return new ResponseEntity<>(errorResponseDTO,
+                HttpStatus.BAD_REQUEST);
+    }
 }

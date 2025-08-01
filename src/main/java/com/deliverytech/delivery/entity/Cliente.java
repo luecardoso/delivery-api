@@ -37,6 +37,9 @@ public class Cliente {
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;
 
+    @Schema(description = "CPF do cliente", example = "12345678901")
+    private String cpf;
+
     @OneToMany(mappedBy = "cliente")
     @JsonIgnore
     private List<Pedido> pedidos;
@@ -119,6 +122,14 @@ public class Cliente {
 
     public void setDataCadastro(LocalDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     @Override

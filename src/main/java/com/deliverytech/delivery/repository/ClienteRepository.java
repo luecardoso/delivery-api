@@ -1,6 +1,8 @@
 package com.deliverytech.delivery.repository;
 
 import com.deliverytech.delivery.entity.Cliente;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +17,11 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     // Verificar se email já existe
     boolean existsByEmail(String email);
+
+    // Verificar se o cpf já existe
+    boolean existsByCpf(String cpf);
+
+    Optional<Cliente> findByCpf(String cpf);
 
     // Buscar clientes ativos
     List<Cliente> findByAtivoTrue();
@@ -45,4 +52,11 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
             "ORDER BY total_pedidos DESC " +
             "LIMIT 10", nativeQuery = true)
     List<Object[]> rankingClientesPorPedidos();
+
+
+    // Buscar clientes ativos com paginacao
+    Page<Cliente> findByAtivoTrue(Pageable pageable);
+
+    @Override
+    void deleteById(Long id);
 }

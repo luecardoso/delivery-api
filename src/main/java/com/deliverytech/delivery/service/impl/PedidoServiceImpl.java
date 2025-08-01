@@ -1,9 +1,7 @@
 package com.deliverytech.delivery.service.impl;
 
-import com.deliverytech.delivery.dto.request.CalculoPedidoRequestDTO;
 import com.deliverytech.delivery.dto.request.ItemPedidoRequestDTO;
 import com.deliverytech.delivery.dto.request.PedidoRequestDTO;
-import com.deliverytech.delivery.dto.response.CalculoPedidoResponseDTO;
 import com.deliverytech.delivery.dto.response.PedidoResponseDTO;
 import com.deliverytech.delivery.entity.*;
 import com.deliverytech.delivery.enums.StatusPedido;
@@ -19,8 +17,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +25,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -100,6 +95,9 @@ public class PedidoServiceImpl implements PedidoService {
         BigDecimal taxaEntrega = restaurante.getTaxaEntrega();
         BigDecimal valorTotal = subtotal.add(taxaEntrega);
 
+        // Validar estoque
+        validarEstoqueProdutos(itensPedido);
+
         // 5. Salvar pedido
         Pedido pedido = new Pedido();
         pedido.setNumeroPedido(pedidoRequestDTO.getNumeroPedido());
@@ -122,6 +120,11 @@ public class PedidoServiceImpl implements PedidoService {
 
         // 7. Atualizar estoque (se aplicável) - Simulação
         // Em um cenário real, aqui seria decrementado o estoque
+        for (ItemPedido item : itensPedido) {
+            Produto produto = item.getProduto();
+            produto.setEstoque(produto.getEstoque() - item.getQuantidade());
+            produtoRepository.save(produto);
+        }
 
         // 8. Retornar pedido criado
         return modelMapper.map(pedidoSalvo, PedidoResponseDTO.class);
@@ -159,7 +162,7 @@ public class PedidoServiceImpl implements PedidoService {
     public PedidoResponseDTO atualizarStatusPedido(Long id, StatusPedido status) {
         // Buscar pedido por ID
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado com ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + id));
         // Atualizar status do pedido
         isTransicaoValida(pedido.getStatus(), status);
         if (!isTransicaoValida(pedido.getStatus(), status)) {
@@ -259,5 +262,20 @@ public class PedidoServiceImpl implements PedidoService {
 
     private boolean podeSerCancelado(StatusPedido status) {
         return status == StatusPedido.PENDENTE || status == StatusPedido.CONFIRMADO;
+    }
+
+    private void validarEstoqueProdutos(List<ItemPedido> itens) {
+        for (ItemPedido item : itens) {
+            Produto produto = produtoRepository.findById(item.getProduto().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
+
+            // Verificação de estoque
+            if (produto.getEstoque() < item.getQuantidade()) {
+                throw new BusinessException(
+                        String.format("Estoque insuficiente para o produto %s. Estoque atual: %d, Quantidade solicitada: %d",
+                                produto.getNome(), produto.getEstoque(), item.getQuantidade())
+                );
+            }
+        }
     }
 }

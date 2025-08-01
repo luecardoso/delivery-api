@@ -16,27 +16,31 @@ public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Identificador único do restaurante", example = "1")
+    @Schema(description = "Identificador único do restaurante", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long id;
 
-    @Schema(description = "Nome do produto", example = "Pizza Margherita", required = true)
+    @Schema(description = "Nome do produto", example = "Pizza Margherita", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nome;
 
-    @Schema(description = "Descrição do produto", example = "Deliciosa pizza com molho de tomate, mussarela e manjericão", required = true)
+    @Schema(description = "Descrição do produto", example = "Deliciosa pizza com molho de tomate, mussarela e manjericão",
+            requiredMode = Schema.RequiredMode.REQUIRED)
     private String descricao;
 
-    @Schema(description = "Preço do produto", example = "29.90", required = true)
+    @Schema(description = "Preço do produto", example = "29.90", requiredMode = Schema.RequiredMode.REQUIRED)
     private BigDecimal preco;
 
-    @Schema(description = "Categoria do produto", example = "Pizzas", required = true)
+    @Schema(description = "Categoria do produto", example = "Pizzas",requiredMode = Schema.RequiredMode.REQUIRED)
     private String categoria;
 
-    @Schema(description = "Disponibilidade do produto", example = "true", required = true)
+    @Schema(description = "Disponibilidade do produto", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
     private Boolean disponivel;
+
+    @Schema(description = "Estoque do produto", example = "10", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer estoque;
 
     @ManyToOne
     @JoinColumn(name = "restaurante_id")
-    @Schema(description = "Restaurante vinculado ao produto", example = "Pizzaria Bella", required = true)
+    @Schema(description = "Restaurante vinculado ao produto", example = "Pizzaria Bella", requiredMode = Schema.RequiredMode.REQUIRED)
     private Restaurante restaurante;
 
     public Produto() {
@@ -105,6 +109,18 @@ public class Produto {
 
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
+    }
+
+    public void setDisponivel(Boolean disponivel) {
+        this.disponivel = disponivel;
+    }
+
+    public Integer getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(Integer estoque) {
+        this.estoque = estoque;
     }
 
     @Override

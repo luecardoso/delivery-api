@@ -1,5 +1,6 @@
 package com.deliverytech.delivery.validation;
 
+import com.deliverytech.delivery.validation.annotation.ValidCEP;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

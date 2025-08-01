@@ -8,6 +8,7 @@ public class ClienteResponseDTO {
     private String nome;
     private String email;
     private Boolean ativo;
+    private String telefone;
 
     public ClienteResponseDTO() {
     }
@@ -49,6 +50,14 @@ public class ClienteResponseDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     @Override

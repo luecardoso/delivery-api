@@ -55,22 +55,23 @@ public class ProdutoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-//    @GetMapping
-//    @Operation(summary = "Listar produtos",
-//            description = "Retorna uma lista paginada de produtos. Pode ser filtrada por restaurante, categoria ou disponibilidade.",
-//            tags = {"Produtos"}
-//    )
-//    public ResponseEntity<PagedResponseWrapper<ProdutoResponseDTO>> listar(@Parameter(description = "Informações de paginação") Pageable pageable,
-//                                                                           @Parameter(description = "Filtro por ID do restaurante")
-//                                                                           @RequestParam(required = false) Long restauranteId,
-//                                                                           @Parameter(description = "Filtro por categoria")
-//                                                                           @RequestParam(required = false) String categoria,
-//                                                                           @Parameter(description = "Filtro por disponibilidade")
-//                                                                           @RequestParam(required = false) Boolean disponivel) {
-//
-//        Page<ProdutoResponseDTO> produtos = produtoService.listarProdutosComPaginacao(pageable, restauranteId, categoria, disponivel);
-//        return ResponseEntity.ok(produtos);
-//    }
+    @GetMapping
+    @Operation(summary = "Listar produtos",
+            description = "Retorna uma lista paginada de produtos. Pode ser filtrada por restaurante, categoria ou disponibilidade.",
+            tags = {"Produtos"}
+    )
+    public ResponseEntity<PagedResponseWrapper<ProdutoResponseDTO>> listar(@Parameter(description = "Informações de paginação") Pageable pageable,
+                                                                           @Parameter(description = "Filtro por ID do restaurante")
+                                                                           @RequestParam(required = false) Long restauranteId,
+                                                                           @Parameter(description = "Filtro por categoria")
+                                                                           @RequestParam(required = false) String categoria,
+                                                                           @Parameter(description = "Filtro por disponibilidade")
+                                                                           @RequestParam(required = false) Boolean disponivel) {
+
+        Page<ProdutoResponseDTO> produtos = produtoService.listarProdutosComPaginacao(pageable, restauranteId, categoria, disponivel);
+        PagedResponseWrapper<ProdutoResponseDTO> response =  new PagedResponseWrapper<>(produtos);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar produto por ID",
@@ -130,23 +131,8 @@ public class ProdutoController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    @Operation(summary = "Listar todos os produtos",
-            description = "Lista todos os produtos disponíveis no sistema",
-            tags = {"Produtos"})
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de produtos recuperada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Nenhum produto encontrado")
-    })
-    public ResponseEntity<ApiResponseWrapper<List<ProdutoResponseDTO>>> buscarTodosProdutos() {
-        List<ProdutoResponseDTO> produtos = produtoService.buscarTodosProdutos();
-        ApiResponseWrapper<List<ProdutoResponseDTO>> response =
-                new ApiResponseWrapper<>(true, produtos, "Produtos encontrados");
-        return ResponseEntity.ok(response);
-    }
-
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') || @produtoService.isOwner(#id)")
+    @PreAuthorize("hasRole('ADMIN') or @produtoService.isOwner(#id)")
     @Operation(summary = "Atualizar produto",
             description = "Atualiza os dados de um produto existente")
     @ApiResponses({

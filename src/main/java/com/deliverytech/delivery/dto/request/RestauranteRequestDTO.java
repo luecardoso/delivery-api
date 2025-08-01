@@ -1,7 +1,7 @@
 package com.deliverytech.delivery.dto.request;
 
-import com.deliverytech.delivery.validation.ValidCategoria;
-import com.deliverytech.delivery.validation.ValidTelefone;
+import com.deliverytech.delivery.validation.annotation.ValidCategoria;
+import com.deliverytech.delivery.validation.annotation.ValidTelefone;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 

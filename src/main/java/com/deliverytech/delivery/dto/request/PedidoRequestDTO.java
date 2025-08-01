@@ -1,11 +1,12 @@
 package com.deliverytech.delivery.dto.request;
 
-import com.deliverytech.delivery.validation.ValidCEP;
+import com.deliverytech.delivery.validation.annotation.ValidCEP;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +19,7 @@ public class PedidoRequestDTO {
 
     @Schema(description = "Data do pedido", example = "2023-10-01", required = true)
     @NotNull(message = "A data do pedido é obrigatória")
-    private String dataPedido;
+    private LocalDateTime dataPedido;
 
     @Schema(description = "Valor total do pedido", example = "99.99", required = true)
     @NotNull(message = "O valor do pedido é obrigatório")
@@ -60,7 +61,7 @@ public class PedidoRequestDTO {
     public PedidoRequestDTO() {
     }
 
-    public PedidoRequestDTO(String cep, Long clienteId, String dataPedido, String enderecoEntrega, String formaPagamento,
+    public PedidoRequestDTO(String cep, Long clienteId, LocalDateTime dataPedido, String enderecoEntrega, String formaPagamento,
                             List<ItemPedidoRequestDTO> itens, String numeroPedido, String observacoes,
                             Long restauranteId, BigDecimal valorTotal) {
         this.cep = cep;
@@ -83,11 +84,11 @@ public class PedidoRequestDTO {
         this.clienteId = clienteId;
     }
 
-    public @NotNull(message = "A data do pedido é obrigatória") String getDataPedido() {
+    public @NotNull(message = "A data do pedido é obrigatória") LocalDateTime getDataPedido() {
         return dataPedido;
     }
 
-    public void setDataPedido(@NotNull(message = "A data do pedido é obrigatória") String dataPedido) {
+    public void setDataPedido(@NotNull(message = "A data do pedido é obrigatória") LocalDateTime dataPedido) {
         this.dataPedido = dataPedido;
     }
 

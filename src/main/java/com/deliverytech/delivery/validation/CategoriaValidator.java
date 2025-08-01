@@ -1,5 +1,6 @@
 package com.deliverytech.delivery.validation;
 
+import com.deliverytech.delivery.validation.annotation.ValidCategoria;
 import jakarta.validation.ConstraintValidator;
 
 import java.util.Arrays;
@@ -9,8 +10,7 @@ public class CategoriaValidator implements ConstraintValidator<ValidCategoria, S
 
     private static final List<String> CATEGORIAS_VALIDAS = Arrays.asList(
             "BRASILEIRA", "ITALIANA", "JAPONESA", "CHINESA", "MEXICANA",
-            "FAST_FOOD", "PIZZA", "HAMBURGUER", "SAUDAVEL",
-            "VEGETARIANA",
+            "FAST_FOOD", "PIZZA", "HAMBURGUER", "SAUDAVEL", "VEGETARIANA",
             "VEGANA", "DOCES", "BEBIDAS", "LANCHES", "ACAI"
     );
 

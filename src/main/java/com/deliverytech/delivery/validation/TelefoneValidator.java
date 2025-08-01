@@ -1,5 +1,6 @@
 package com.deliverytech.delivery.validation;
 
+import com.deliverytech.delivery.validation.annotation.ValidTelefone;
 import jakarta.validation.ConstraintValidator;
 
 public class TelefoneValidator implements ConstraintValidator<ValidTelefone, String> {

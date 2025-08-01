@@ -38,7 +38,7 @@ public class PedidoController {
     @PreAuthorize("hasRole('CLIENTE')")
     @Operation(summary = "Criar pedido",
             description = "Cria um novo pedido no sistema",
-            security = @SecurityRequirement(name = "Bearer Authen ca on"),
+            security = @SecurityRequirement(name = "Bearer Authentication"),
             tags = {"Pedidos"})
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso"),

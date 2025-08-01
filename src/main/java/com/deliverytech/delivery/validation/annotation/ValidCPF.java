@@ -1,16 +1,17 @@
-package com.deliverytech.delivery.validation;
+package com.deliverytech.delivery.validation.annotation;
 
+import com.deliverytech.delivery.validation.CPFValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = TelefoneValidator.class)
+@Constraint(validatedBy = CPFValidator.class)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidTelefone {
-    String message() default "Telefone deve ter formato válido (10 ou 11 digitos)";
+public @interface ValidCPF {
+    String message() default "CPF deve ter formato válido 12345678909 ou 123.456.789-09)";
 
     Class<?>[] groups() default {};
 

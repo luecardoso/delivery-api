@@ -1,5 +1,6 @@
-package com.deliverytech.delivery.validation;
+package com.deliverytech.delivery.validation.annotation;
 
+import com.deliverytech.delivery.validation.CategoriaValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

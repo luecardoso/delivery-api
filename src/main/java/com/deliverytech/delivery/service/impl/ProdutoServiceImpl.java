@@ -2,6 +2,7 @@ package com.deliverytech.delivery.service.impl;
 
 import com.deliverytech.delivery.dto.request.ProdutoRequestDTO;
 import com.deliverytech.delivery.dto.response.ProdutoResponseDTO;
+import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.entity.Produto;
 import com.deliverytech.delivery.entity.Restaurante;
 import com.deliverytech.delivery.exceptions.BusinessException;
@@ -10,6 +11,8 @@ import com.deliverytech.delivery.repository.RestauranteRepository;
 import com.deliverytech.delivery.service.ProdutoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -191,6 +194,12 @@ public class ProdutoServiceImpl implements ProdutoService {
         return produtos.stream()
                 .map(produto -> modelMapper.map(produto, ProdutoResponseDTO.class))
                 .toList();
+    }
+
+    @Override
+    public Page<ProdutoResponseDTO> listarProdutosComPaginacao(Pageable pageable, Long restauranteId, String categoria, Boolean disponivel) {
+        Page<Produto> listaProdutos = produtoRepository.listarProdutosComPaginacao(pageable,restauranteId,categoria,disponivel);
+        return listaProdutos.map(produto -> modelMapper.map(produto, ProdutoResponseDTO.class));
     }
 
     @Override

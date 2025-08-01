@@ -95,22 +95,6 @@ public class RestauranteController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping
-//    @Operation(summary = "Listar todos os restaurantes",
-//            description = "Retorna uma lista paginada de todos os restaurantes disponíveis",
-//            tags = {"Restaurantes"})
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Lista de restaurantes retornada com sucesso",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = RestauranteResponseDTO.class)))
-//    })
-//    public ResponseEntity<Page<RestauranteResponseDTO>> listar(@Parameter(description = "Informações de paginação") Pageable pageable,
-//                                                               @Parameter(description = "Filtro por categoria")
-//                                                               @RequestParam(required = false) String categoria) {
-//        Page<RestauranteResponseDTO> restaurantes = restauranteService.listarTodos(pageable, categoria);
-//        return ResponseEntity.ok(restaurantes);
-//    }
-
     @GetMapping("/categoria/{categoria}")
     @Operation(summary = "Buscar Por Categoria",
             description = "Lista restaurantes de uma categoria especíﬁca")
@@ -171,7 +155,7 @@ public class RestauranteController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') || hasRole('RESTAURANTE') && @restauranteService.isOwner(#id)")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('RESTAURANTE') and @restauranteService.isOwner(#id)")
     @Operation(summary = "Atualizar restaurante",
             description = "Atualiza os dados de um restaurante existente")
     @ApiResponses({

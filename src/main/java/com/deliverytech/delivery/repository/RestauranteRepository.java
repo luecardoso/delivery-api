@@ -57,9 +57,6 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
             "GROUP BY r.id, r.nome")
     List<RelatorioVendas> relatorioVendasPorRestaurante();
 
-//    @Query
-//    Page<Restaurante> findAll(String categoria, Boolean ativo, Pageable pageable);
-
     @Query("SELECT r FROM Restaurante r WHERE " +
             "(:categoria IS NULL OR r.categoria = :categoria) AND " +
             "(:ativo IS NULL OR r.ativo = :ativo)")

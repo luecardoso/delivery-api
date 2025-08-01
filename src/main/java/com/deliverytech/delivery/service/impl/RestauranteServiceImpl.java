@@ -8,7 +8,6 @@ import com.deliverytech.delivery.exceptions.BusinessException;
 import com.deliverytech.delivery.exceptions.EntityNotFoundException;
 import com.deliverytech.delivery.repository.projection.RelatorioVendas;
 import com.deliverytech.delivery.repository.RestauranteRepository;
-import com.deliverytech.delivery.security.SecurityUtils;
 import com.deliverytech.delivery.service.RestauranteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

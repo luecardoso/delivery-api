@@ -3,14 +3,18 @@ package com.deliverytech.delivery.controller;
 import com.deliverytech.delivery.dto.request.ClienteRequestDTO;
 import com.deliverytech.delivery.dto.response.ApiResponseWrapper;
 import com.deliverytech.delivery.dto.response.ClienteResponseDTO;
+import com.deliverytech.delivery.dto.response.PagedResponseWrapper;
 import com.deliverytech.delivery.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -45,20 +49,21 @@ public class ClienteController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Listar clientes ativos",
             description = "Lista todos os clientes que estão ativos no sistema")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de clientes recuperada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Nenhum cliente encontrado")
     })
-    public ResponseEntity<ApiResponseWrapper<List<ClienteResponseDTO>>> listarClientesAtivos() {
-        List<ClienteResponseDTO> clientes = clienteService.listarClientesAtivos();
-        ApiResponseWrapper<List<ClienteResponseDTO>> response =
-                new ApiResponseWrapper<>(true, clientes, "busca realizada com sucesso");
+    public ResponseEntity<PagedResponseWrapper<ClienteResponseDTO>> listarClientesAtivos(Pageable pageable) {
+        Page<ClienteResponseDTO> clientes = clienteService.listarAtivosPaginado(pageable);
+        PagedResponseWrapper<ClienteResponseDTO> response =  new PagedResponseWrapper<>(clientes);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Buscar cliente por ID",
             description = "Recupera os detalhes de um cliente específico pelo ID")
     @ApiResponses({
@@ -73,6 +78,7 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Buscar clientes por nome via parametro",
             description = "Recupera uma lista de clientes que correspondem ao nome fornecido")
     @ApiResponses({
@@ -87,6 +93,7 @@ public class ClienteController {
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Buscar cliente por email",
             description = "Recupera os detalhes de um cliente específico pelo email")
     @ApiResponses({
@@ -101,6 +108,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CLIENTE')")
     @Operation(summary = "Atualizar cliente",
             description = "Atualiza os dados de um cliente existente")
     @ApiResponses({
@@ -128,6 +136,15 @@ public class ClienteController {
         ApiResponseWrapper<ClienteResponseDTO> response =
                 new ApiResponseWrapper<>(true, clienteAtualizado, "cliente inativado com sucesso");
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponseWrapper<Void>> deletarCliente(@PathVariable Long id){
+        clienteService.deletarCliente(id);
+        ApiResponseWrapper<Void> response =
+                new ApiResponseWrapper<>(true, null, "cliente deletado com sucesso");
+        return ResponseEntity.noContent().build();
     }
 
 }
