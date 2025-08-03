@@ -50,6 +50,7 @@ public class SecurityConfig {
                             .requestMatchers("/api/clientes").permitAll()
                             .requestMatchers("/health").permitAll()
                             .requestMatchers("/info").permitAll()
+                            .requestMatchers("/actuator/**").permitAll()
                             .requestMatchers("/actuator/health").permitAll()
                             .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**", "/v3/api-docs",
                                     "/status","/login","/static/**" ).permitAll()
@@ -77,7 +78,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
 
