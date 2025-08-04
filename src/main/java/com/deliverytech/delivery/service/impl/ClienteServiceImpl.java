@@ -47,7 +47,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    @Cacheable(value = "cliente", key = "#id")
+    @Cacheable(value = "cliente")
     public ClienteResponseDTO buscarClientePorId(Long id) {
         // Buscar cliente por ID
         Cliente cliente = clienteRepository.findById(id)
@@ -57,7 +57,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    @Cacheable(value = "cliente", key = "#id")
+    @Cacheable(value = "cliente")
     public ClienteResponseDTO buscarClientePorEmail(String email) {
         // Buscar cliente por email
         Cliente cliente = clienteRepository.findByEmail(email)
@@ -67,7 +67,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    @Cacheable(value = "cliente", key = "#id")
+    @Cacheable(value = "cliente")
     public List<ClienteResponseDTO> buscarClientePorNome(String nome) {
         // Buscar clientes por nome
         List<Cliente> clientes = clienteRepository.findByNomeContainingIgnoreCase(nome);
@@ -114,7 +114,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    @Cacheable(value = "cliente", key = "#id")
+    @Cacheable(value = "cliente")
     public List<ClienteResponseDTO> listarClientesAtivos() {
         // Buscar clientes ativos
         List<Cliente> clientesAtivos = clienteRepository.findByAtivoTrue();
@@ -125,7 +125,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    @Cacheable(value = "cliente", key = "#id")
+    @Cacheable(value = "cliente")
     public Page<ClienteResponseDTO> listarAtivosPaginado(Pageable pageable) {
         Page<Cliente> clientePage = clienteRepository.findByAtivoTrue(pageable);
         return clientePage.map(clientes -> modelMapper.map(clientes, ClienteResponseDTO.class));
@@ -139,7 +139,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    @Cacheable(value = "cliente", key = "#id")
+    @Cacheable(value = "cliente")
     public ClienteResponseDTO buscarPorCPF(String cpf) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new IllegalArgumentException("CPF já cadastrado"));
