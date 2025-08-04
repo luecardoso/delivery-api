@@ -11,6 +11,8 @@ import com.deliverytech.delivery.repository.RestauranteRepository;
 import com.deliverytech.delivery.service.ProdutoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 
     @Override
+    @CacheEvict(value = "produtos", allEntries = true)
     public ProdutoResponseDTO cadastrarProduto(ProdutoRequestDTO produtoRequestDTO) {
         // Converter DTO para entidade
         Produto produto = modelMapper.map(produtoRequestDTO, Produto.class);
@@ -46,6 +49,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Cacheable(value = "produtos" , key = "#id")
     public ProdutoResponseDTO buscarProdutoPorId(Long id) {
         // Buscar produto por ID
         Produto produto = produtoRepository.findById(id)
@@ -55,6 +59,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @CacheEvict(value = "produtos", allEntries = true)
     public ProdutoResponseDTO atualizarProduto(Long id, ProdutoRequestDTO produtoRequestDTO) {
         // Buscar produto existente
         Produto produtoExistente = produtoRepository.findById(id)
@@ -87,6 +92,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @CacheEvict(value = "produtos", allEntries = true)
     public ProdutoResponseDTO ativarDesativarProduto(Long id) {
         // Buscar produto existente
         Produto produto = produtoRepository.findById(id)
@@ -100,6 +106,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @CacheEvict(value = "produtos", allEntries = true)
     public ProdutoResponseDTO alterarDisponibilidade(Long id) {
         //Buscar produto por ID
         Produto produto = produtoRepository.findById(id)
@@ -115,6 +122,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Cacheable(value = "produtos")
     public List<ProdutoResponseDTO> buscarProdutosPorNome(String nome) {
         // Buscar produtos por restaurante ID
         List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCaseAndDisponivelTrue(nome);
@@ -129,6 +137,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Cacheable(value = "produtos")
     public List<ProdutoResponseDTO> buscarProdutosPorRestaurante(Long restauranteId) {
         // Buscar produtos por restaurante ID
         List<Produto> produtos = produtoRepository.findByRestauranteIdAndDisponivelTrue(restauranteId);
@@ -143,6 +152,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Cacheable(value = "produtos")
     public List<ProdutoResponseDTO> buscarProdutosPorCategoria(String categoria) {
         // Buscar produtos por categoria
         List<Produto> produtos = produtoRepository.findByCategoriaAndDisponivelTrue(categoria);
@@ -156,6 +166,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Cacheable(value = "produtos")
     public List<ProdutoResponseDTO> buscarProdutosPorFaixaPreco(BigDecimal precoMinimo,
                                                                 BigDecimal precoMaximo) {
         // Buscar produtos por faixa de preço
@@ -171,6 +182,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Cacheable(value = "produtos")
     public List<ProdutoResponseDTO> buscarTodosProdutos() {
         // Buscar todos os produtos
         List<Produto> produtos = produtoRepository.findAll();
@@ -184,6 +196,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Cacheable(value = "produtos")
     public List<ProdutoResponseDTO> buscarPorPrecoMenorOuIgual(BigDecimal valor) {
         // Buscar produtos com preço menor ou igual ao valor especificado
         List<Produto> produtos = produtoRepository.findByPrecoLessThanEqualAndDisponivelTrue(valor);
@@ -197,12 +210,14 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    @Cacheable(value = "produtos")
     public Page<ProdutoResponseDTO> listarProdutosComPaginacao(Pageable pageable, Long restauranteId, String categoria, Boolean disponivel) {
         Page<Produto> listaProdutos = produtoRepository.listarProdutosComPaginacao(pageable,restauranteId,categoria,disponivel);
         return listaProdutos.map(produto -> modelMapper.map(produto, ProdutoResponseDTO.class));
     }
 
     @Override
+    @CacheEvict(value = "produtos", allEntries = true)
     public void removerProduto(Long id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Produto não encontrado com ID: " + id));

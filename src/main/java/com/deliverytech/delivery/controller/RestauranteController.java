@@ -88,7 +88,7 @@ public class RestauranteController {
                                                                                                     @RequestParam(required = false) String categoria,
                                                                                                     @Parameter(description = "Status ativo do restaurante")
                                                                                                     @RequestParam(required = false) Boolean ativo,
-                                                                                                    @Parameter(description = "Parâmetros de paginação")
+                                                                                                    @Parameter(description = "Parâmetros de paginação", required = false)
                                                                                                     Pageable pageable) {
         Page<RestauranteResponseDTO> restaurantes = restauranteService.buscarRestaurantesComPaginacao(categoria, ativo, pageable);
         PagedResponseWrapper<RestauranteResponseDTO> response = new PagedResponseWrapper<>(restaurantes);

@@ -9,6 +9,7 @@ import com.deliverytech.delivery.repository.ClienteRepository;
 import com.deliverytech.delivery.service.ClienteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Cacheable(value = "cliente", key = "#id")
     public ClienteResponseDTO buscarClientePorId(Long id) {
         // Buscar cliente por ID
         Cliente cliente = clienteRepository.findById(id)
@@ -55,6 +57,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Cacheable(value = "cliente", key = "#id")
     public ClienteResponseDTO buscarClientePorEmail(String email) {
         // Buscar cliente por email
         Cliente cliente = clienteRepository.findByEmail(email)
@@ -64,6 +67,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Cacheable(value = "cliente", key = "#id")
     public List<ClienteResponseDTO> buscarClientePorNome(String nome) {
         // Buscar clientes por nome
         List<Cliente> clientes = clienteRepository.findByNomeContainingIgnoreCase(nome);
@@ -110,6 +114,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Cacheable(value = "cliente", key = "#id")
     public List<ClienteResponseDTO> listarClientesAtivos() {
         // Buscar clientes ativos
         List<Cliente> clientesAtivos = clienteRepository.findByAtivoTrue();
@@ -120,6 +125,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Cacheable(value = "cliente", key = "#id")
     public Page<ClienteResponseDTO> listarAtivosPaginado(Pageable pageable) {
         Page<Cliente> clientePage = clienteRepository.findByAtivoTrue(pageable);
         return clientePage.map(clientes -> modelMapper.map(clientes, ClienteResponseDTO.class));
@@ -133,6 +139,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Cacheable(value = "cliente", key = "#id")
     public ClienteResponseDTO buscarPorCPF(String cpf) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new IllegalArgumentException("CPF já cadastrado"));

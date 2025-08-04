@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Relatorios", description = "Operações relacionadas aos relatórios")
 public class RelatorioController {
 
-    @GetMapping("/vendas-po-restaurante")
+    @GetMapping("/vendas-por-restaurante")
     public ResponseEntity<?> vendasPorRestaurante() {
         return null;
     }
